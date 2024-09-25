@@ -7,6 +7,9 @@
 
 using namespace std; 
 
+// GLOBAL VARIABLES
+point2d p0; // location of the bottommost point, guaranteed to be an extreme point
+
 /* **************************************** */
 /* returns the signed area of triangle abc. The area is positive if c
    is to the left of ab, and negative if c is to the right of ab
@@ -15,8 +18,8 @@ int signed_area2D(point2d a, point2d b, point2d c) {
   int Ax = b.x - a.x; 
   int Ay = b.y - a.y; 
   int Bx = c.x -a.x; 
-  int By = c.y - aa.y; 
-  return Ax By - Ay Bx; 
+  int By = c.y - a.y; 
+  return (Ax*By) - (Ay*Bx); 
  
 }
 
@@ -88,6 +91,33 @@ vector<point2d>& sortPoints(vector<point2d>& pts){
   return pts;
 }
 
+//how to evaluate whether the value pointed to by a sorts before the value pointed to by b 
+//(in which case the compare function should return -1). If the values are equal, then it should 
+//return 0 and finally if b should sort before a, the compare should return 1.
+
+// define a comparator for the sorting of all our points
+int compare_angles(point2d point1, point2d point2) {
+  double angle1 = (double) (point1.y - p0.y) / (point1.x - p0.x); // double check its a float
+  double angle2 = (double) (point2.y - p0.y) / (point2.x - p0.x);
+
+  if (angle1 < angle2) {
+    // we want angle1 sorted before angle2
+    return -1;
+  } 
+
+  double manhattan_distance_point1 = (point1.x - p0.x) + (point1.y - p0.y);
+  double manhattan_distance_point2 = (point2.x - p0.x) + (point2.y - p0.y);
+
+  //if points 1 and 2 are both right of p)
+  if ((point1.x > p0.x) && (point2.x > p0.x)){
+    if((angle1 == angle2) && manhattan_distance_point1 < manhattan_distance_point2){
+      return -1;
+    }
+  }
+    
+
+}
+
 // compute the convex hull of pts, and store the points on the hull in hull
 void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   //Algorithm GrahamScan (input: points P )
@@ -95,16 +125,16 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
     //Sort all other points ccw around p0; denote them p1, p2, ...pn−1 in this order.
     //Initialize stack S = (p2, p1)
     //for i = 3 to n-1 do
-–     //if pi is left of (second(S), first(S)): 
+     //if pi is left of (second(S), first(S)): 
         //push pi on S
-–     //else:
-∗       //repeat: pop S while pi is right of (second(S), first(S))
-∗       //push pi on S
+     //else:
+       //repeat: pop S while pi is right of (second(S), first(S))
+       //push pi on S
 
   printf("hull2d (graham scan): start\n"); 
   hull.clear(); //should be empty, but clear it to be safe
 
-  point2d p0;
+  // set point p0 globally
   int minY = 10000;
   for( int i = 0; i < pts.size(); i ++){
     if ( pts[i].y < minY){
@@ -123,8 +153,8 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   //assuming hull is acting as our stack
   hull.push_back(p0);
   hull.push_back(sortedPoints[1]);//does sortedPoints include p0, the index in this line depends on that
-  int top1 = sortedPoints.size() - 1
-  int top2 = sortedPoints.size() - 2
+  int top1 = sortedPoints.size() - 1;
+  int top2 = sortedPoints.size() - 2;
   for (int i = 3; i < sortedPoints.size(); i++){//is it really i = 3?
     if(left_on(sortedPoints[top2], sortedPoints[top1], sortedPoints[i])){
       hull.push_back(sortedPoints[i]);
