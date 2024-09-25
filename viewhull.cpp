@@ -74,6 +74,8 @@ vector<point2d>  points;
 //note: needs to be global in order to be rendered
 vector<point2d>  hull; 
 
+double heartrad = 5; // will scale the heart up 5 times
+
 
 
 //window size for the graphics window
@@ -116,6 +118,7 @@ void initialize_points_circle(vector<point2d>& pts, int n);
 void initialize_points_horizontal_line(vector<point2d>&pts, int n);
 void initialize_points_random(vector<point2d>&pts, int n) ;
 void initialize_points_cross(vector<point2d>&pts, int n) ;
+void initialize_points_heart(vector<point2d>& pts); // ADDITIONAL code from in class ex.
 
 //you'll add more 
 
@@ -123,7 +126,21 @@ void initialize_points_cross(vector<point2d>&pts, int n) ;
 /********************************************************************/
 
 
+void initialize_points_heart(vector<point2d>& pts) {
 
+  pts.clear(); // clear it out for safety
+
+  double t = 0.01; // ranges from 0 to 2pi in the loop below
+  point2d p;
+
+  for (double a = 0; a<2*M_PI; a+=t) {
+    p.x = 16 * sin(a)*sin(a)*sin(a);
+    p.y = 13* cos(a) - 5*cos(2*a) - 2*cos(3*a) - cos(4*a);
+    pts.push_back(p);
+  }
+  printf("heart: inititalied with %lu points\n", pts.size());
+
+}
 
 
 
@@ -265,7 +282,7 @@ int main(int argc, char** argv) {
   assert(NPOINTS >0); 
 
   //populate the points 
-  initialize_points_random(points, NPOINTS);
+  initialize_points_random(points, NPOINTS); // Change this based on what you actually want to draw
   //print_vector("points:", points);
 
   //compute the convex hull 
@@ -329,7 +346,9 @@ void display(void) {
   //then scale the points to [0,2]x[0,2]
   glScalef(2.0/WINDOWSIZE, 2.0/WINDOWSIZE, 1.0);  
   //first translate the points to [-WINDOWSIZE/2, WINDOWSIZE/2]
+
   glTranslatef(-WINDOWSIZE/2, -WINDOWSIZE/2, 0); 
+  // TODO: CHANGED THIS! DELETE THE LINE BELOW, COMMENT IN THE ONE ABOVE!
  
   draw_points(points);
   draw_hull(hull); 

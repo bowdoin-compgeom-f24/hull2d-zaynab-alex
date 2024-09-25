@@ -170,23 +170,23 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   }
   //now we have p0 guaranteed to be on hull
   //now we sort points
-  sort(pts.begin(), pts.end(), compare_points);
+  sort(pts.begin(), pts.end(), compare_angles);
   //assuming hull is acting as our stack
   hull.push_back(p0);
-  hull.push_back(sortedPoints[1]);//does sortedPoints include p0, the index in this line depends on that
-  int top1 = sortedPoints.size() - 1;
-  int top2 = sortedPoints.size() - 2;
-  for (int i = 3; i < sortedPoints.size(); i++){//is it really i = 3?
-    if(strictly_left(sortedPoints[top2], sortedPoints[top1], sortedPoints[i])){//i changed it to strictly_left to deal with colinearity
-      hull.push_back(sortedPoints[i]);
+  hull.push_back(pts[1]);//does sortedPoints include p0, the index in this line depends on that
+  int top1 = pts.size() - 1;
+  int top2 = pts.size() - 2;
+  for (int i = 3; i < pts.size(); i++){//is it really i = 3?
+    if(left_strictly(pts[top2], pts[top1], pts[i])){//i changed it to strictly_left to deal with colinearity
+      hull.push_back(pts[i]);
     }
     else{
       hull.pop_back();
       //while points[i] is on right of edge a,b OR points[i] is colinear with edge a,b
-      while(!(left_on(sortedPoints[top2], sortedPoints[top1], sortedPoints[i]))){
+      while(!(left_on(pts[top2], pts[top1], pts[i]))){
         hull.pop_back();
       }
-      hull.push_back(sortedPoints[i]);
+      hull.push_back(pts[i]);
     }
   }
   //return hull
