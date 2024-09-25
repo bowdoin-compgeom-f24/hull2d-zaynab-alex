@@ -86,6 +86,22 @@ vector<point2d>& initializer(vector<point2d>& pts, vector<point2d>& hull){
 }
 
 
+vector<point2d>& initializer_square(vector<point2d>& pts, vector<point2d>& hull){
+  
+  hull.clear(); //should be empty, but clear it to be safe
+  point2d p;
+  for(int i = 0; i <= 100; i+=50){
+    for(int j = 0; j <= 100; j += 50){
+      if( i== 50 & j ==50){
+        continue;
+      }
+      p.x = i;
+      p.y = j;
+      hull.push_back(p);
+    }
+  }
+  return hull;
+}
 //how to evaluate whether the value pointed to by a sorts before the value pointed to by b 
 //(in which case the compare function should return -1). If the values are equal, then it should 
 //return 0 and finally if b should sort before a, the compare should return 1.
@@ -93,9 +109,7 @@ vector<point2d>& initializer(vector<point2d>& pts, vector<point2d>& hull){
 // define a comparator for the sorting of all our points
 int compare_angles(point2d point1, point2d point2) {
   double angle1 = (double) (point1.y - p0.y) / (point1.x - p0.x); // double check its a float
-  angle1 = atan(angle1);//im a little confused to what atan tells us cuz apparently
-  //it only returns values between -pi/2 and pi/2
-  //if this proves to be problematic we can degrees by multiplying result by 180/pi
+  angle1 = atan(angle1);
   double angle2 = (double) (point2.y - p0.y) / (point2.x - p0.x);
   angle2 = atan(angle2);
 
@@ -112,7 +126,7 @@ int compare_angles(point2d point1, point2d point2) {
   double manhattan_distance_point2 = (point2.x - p0.x) + (point2.y - p0.y);
 
   //if points 1 and 2 are both right of he x value of p0 or have the same x as p)
-  if ((point1.x >= p0.x) && (point2.x >= p0.x) ){
+  if ((point1.x > p0.x) && (point2.x > p0.x) ){
     //check which point is closer
     if(manhattan_distance_point1 < manhattan_distance_point2){
       //if point 1 is closer to p0 then sort first
@@ -123,7 +137,7 @@ int compare_angles(point2d point1, point2d point2) {
       return 1;
     }
   }
-  //if points 1 and 2 are left of the x value of p0
+  //if points 1 and 2 are left of or equal to the x value of p0
   else{
     //check which point is closer
     if(manhattan_distance_point1 > manhattan_distance_point2){
@@ -157,14 +171,17 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
 
   // set point p0 globally
   int minY = 10000;
+  int point0_index;
   for( int i = 0; i < pts.size(); i ++){
     if ( pts[i].y < minY){
       minY = pts[i].y;
       p0 = pts[i];
+      point0_index = i;
     }
     else if(pts[i].y == minY && pts[i].x > p0.x){
       minY = pts[i].y;
       p0 = pts[i];
+      point0_index = i;
     }
 
   }
