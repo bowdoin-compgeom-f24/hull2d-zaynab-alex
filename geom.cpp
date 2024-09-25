@@ -85,11 +85,6 @@ vector<point2d>& initializer(vector<point2d>& pts, vector<point2d>& hull){
   return hull;
 }
 
-vector<point2d>& sortPoints(vector<point2d>& pts){
-  //do sorting and use leftOf as basis
-  
-  return pts;
-}
 
 //how to evaluate whether the value pointed to by a sorts before the value pointed to by b 
 //(in which case the compare function should return -1). If the values are equal, then it should 
@@ -104,14 +99,36 @@ int compare_angles(point2d point1, point2d point2) {
     // we want angle1 sorted before angle2
     return -1;
   } 
-
+  if (angle1 > angle2) {
+    // we want angle2 sorted before angle1
+    return 1;
+  } 
+  //dealing with colinear points
   double manhattan_distance_point1 = (point1.x - p0.x) + (point1.y - p0.y);
   double manhattan_distance_point2 = (point2.x - p0.x) + (point2.y - p0.y);
 
-  //if points 1 and 2 are both right of p)
-  if ((point1.x > p0.x) && (point2.x > p0.x)){
-    if((angle1 == angle2) && manhattan_distance_point1 < manhattan_distance_point2){
+  //if points 1 and 2 are both right of he x value of p0 or have the same x as p)
+  if ((point1.x >= p0.x) && (point2.x >= p0.x) ){
+    //check which point is closer
+    if(manhattan_distance_point1 < manhattan_distance_point2){
+      //if point 1 is closer to p0 then sort first
       return -1;
+    }
+    else{
+      //point 2 is closer so sort it first
+      return 1;
+    }
+  }
+  //if points 1 and 2 are left of the x value of p0
+  else{
+    //check which point is closer
+    if(manhattan_distance_point1 > manhattan_distance_point2){
+      //if point 1 is further from p0 so sort it first
+      return -1;
+    }
+    else{
+      //point 2 is further from p0 so sort it first
+      return 1;
     }
   }
     
@@ -149,7 +166,8 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   }
   //now we have p0 guaranteed to be on hull
   //now we sort points
-  vector<point2d>& sortedPoints = sortPoints(pts);
+  //sort takes 2 more parameters but im confused as to how they work
+  sort(compare_points);
   //assuming hull is acting as our stack
   hull.push_back(p0);
   hull.push_back(sortedPoints[1]);//does sortedPoints include p0, the index in this line depends on that
