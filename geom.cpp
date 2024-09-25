@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <cmath>
 #include <vector>
 
 using namespace std; 
@@ -93,7 +93,11 @@ vector<point2d>& initializer(vector<point2d>& pts, vector<point2d>& hull){
 // define a comparator for the sorting of all our points
 int compare_angles(point2d point1, point2d point2) {
   double angle1 = (double) (point1.y - p0.y) / (point1.x - p0.x); // double check its a float
+  angle1 = atan(angle1);//im a little confused to what atan tells us cuz apparently
+  //it only returns values between -pi/2 and pi/2
+  //if this proves to be problematic we can degrees by multiplying result by 180/pi
   double angle2 = (double) (point2.y - p0.y) / (point2.x - p0.x);
+  angle2 = atan(angle2);
 
   if (angle1 < angle2) {
     // we want angle1 sorted before angle2
@@ -166,20 +170,19 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   }
   //now we have p0 guaranteed to be on hull
   //now we sort points
-  //sort takes 2 more parameters but im confused as to how they work
-  sort(compare_points);
+  sort(pts.begin(), pts.end(), compare_points);
   //assuming hull is acting as our stack
   hull.push_back(p0);
   hull.push_back(sortedPoints[1]);//does sortedPoints include p0, the index in this line depends on that
   int top1 = sortedPoints.size() - 1;
   int top2 = sortedPoints.size() - 2;
   for (int i = 3; i < sortedPoints.size(); i++){//is it really i = 3?
-    if(left_on(sortedPoints[top2], sortedPoints[top1], sortedPoints[i])){
+    if(strictly_left(sortedPoints[top2], sortedPoints[top1], sortedPoints[i])){//i changed it to strictly_left to deal with colinearity
       hull.push_back(sortedPoints[i]);
     }
     else{
       hull.pop_back();
-      //while points[i] is on right of edge a,b
+      //while points[i] is on right of edge a,b OR points[i] is colinear with edge a,b
       while(!(left_on(sortedPoints[top2], sortedPoints[top1], sortedPoints[i]))){
         hull.pop_back();
       }
