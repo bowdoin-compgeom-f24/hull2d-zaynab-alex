@@ -20,7 +20,6 @@ int signed_area2D(point2d a, point2d b, point2d c) {
   int Bx = c.x -a.x; 
   int By = c.y - a.y; 
   return (Ax*By) - (Ay*Bx); 
- 
 }
 
 
@@ -86,32 +85,16 @@ vector<point2d>& initializer(vector<point2d>& pts, vector<point2d>& hull){
 }
 
 
-vector<point2d>& initializer_square(vector<point2d>& pts, vector<point2d>& hull){
-  
-  hull.clear(); //should be empty, but clear it to be safe
-  point2d p;
-  for(int i = 0; i <= 100; i+=50){
-    for(int j = 0; j <= 100; j += 50){
-      if( i== 50 & j ==50){
-        continue;
-      }
-      p.x = i;
-      p.y = j;
-      hull.push_back(p);
-    }
-  }
-  return hull;
-}
 //how to evaluate whether the value pointed to by a sorts before the value pointed to by b 
 //(in which case the compare function should return -1). If the values are equal, then it should 
 //return 0 and finally if b should sort before a, the compare should return 1.
 
 // define a comparator for the sorting of all our points
 int compare_angles(point2d point1, point2d point2) {
-  double angle1 = (double) (point1.y - p0.y) / (point1.x - p0.x); // double check its a float
-  angle1 = atan(angle1);
-  double angle2 = (double) (point2.y - p0.y) / (point2.x - p0.x);
-  angle2 = atan(angle2);
+  double angle1 = atan2((double) (point1.y - p0.y), (double) (point1.x - p0.x));//im a little confused to what atan tells us cuz apparently
+  //it only returns values between -pi/2 and pi/2
+  //if this proves to be problematic we can degrees by multiplying result by 180/pi
+  double angle2 = atan2((double) (point2.y - p0.y), (double) (point2.x - p0.x));
 
   if (angle1 < angle2) {
     // we want angle1 sorted before angle2
@@ -125,8 +108,8 @@ int compare_angles(point2d point1, point2d point2) {
   double manhattan_distance_point1 = (point1.x - p0.x) + (point1.y - p0.y);
   double manhattan_distance_point2 = (point2.x - p0.x) + (point2.y - p0.y);
 
-  //if points 1 and 2 are both right of he x value of p0 or have the same x as p)
-  if ((point1.x > p0.x) && (point2.x > p0.x) ){
+  //if points 1 and 2 are both right of the x value of p0 or have the same x as p0
+  if ((point1.x >= p0.x) && (point2.x >= p0.x) ){
     //check which point is closer
     if(manhattan_distance_point1 < manhattan_distance_point2){
       //if point 1 is closer to p0 then sort first
@@ -137,7 +120,7 @@ int compare_angles(point2d point1, point2d point2) {
       return 1;
     }
   }
-  //if points 1 and 2 are left of or equal to the x value of p0
+  //if points 1 and 2 are left of the x value of p0
   else{
     //check which point is closer
     if(manhattan_distance_point1 > manhattan_distance_point2){
@@ -149,7 +132,6 @@ int compare_angles(point2d point1, point2d point2) {
       return 1;
     }
   }
-    
 
 }
 
@@ -171,20 +153,24 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
 
   // set point p0 globally
   int minY = 10000;
-  int point0_index;
+  int p0_index;
   for( int i = 0; i < pts.size(); i ++){
+    // if it is lower vertically, set it to p0
     if ( pts[i].y < minY){
       minY = pts[i].y;
       p0 = pts[i];
-      point0_index = i;
+      p0_index = i;
     }
+    // if the current min y is the same as running min y set current point -> p0 if it is RIGHT of the running p0
     else if(pts[i].y == minY && pts[i].x > p0.x){
       minY = pts[i].y;
       p0 = pts[i];
-      point0_index = i;
+      p0_index = i;
     }
-
   }
+  // delete p0 from our pts, since it is guaranteed to be an extreme point and doesn't need sorting
+  pts.erase(pts.begin() + p0_index); // TODO test that this is working correctly
+
   //now we have p0 guaranteed to be on hull
   //now we sort points
   sort(pts.begin(), pts.end(), compare_angles);

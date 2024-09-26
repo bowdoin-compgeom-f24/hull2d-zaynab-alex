@@ -16,6 +16,7 @@
 #include <math.h>
 #include <assert.h>
 #include <strings.h>
+#include <cmath>
 
 //to compile on both apple and unix platform
 #ifdef __APPLE__
@@ -118,27 +119,28 @@ void initialize_points_circle(vector<point2d>& pts, int n);
 void initialize_points_horizontal_line(vector<point2d>&pts, int n);
 void initialize_points_random(vector<point2d>&pts, int n) ;
 void initialize_points_cross(vector<point2d>&pts, int n) ;
-void initialize_points_heart(vector<point2d>& pts); // ADDITIONAL code from in class ex.
 
 //you'll add more 
+void initialize_points_heart(vector<point2d>& pts, int n); 
 
 
 /********************************************************************/
 
 
-void initialize_points_heart(vector<point2d>& pts) {
+void initialize_points_heart(vector<point2d>& pts, int n) {
 
+  printf("\ninitialize points heart\n"); 
   pts.clear(); // clear it out for safety
 
-  double t = 0.01; // ranges from 0 to 2pi in the loop below
+  double t = (2*M_PI) / n; // defining step size this way will give us n points
   point2d p;
 
   for (double a = 0; a<2*M_PI; a+=t) {
-    p.x = 16 * sin(a)*sin(a)*sin(a);
-    p.y = 13* cos(a) - 5*cos(2*a) - 2*cos(3*a) - cos(4*a);
+    p.x = (WINDOWSIZE/4) + sqrt(2) * sin(a)*sin(a)*sin(a);
+    p.y = (WINDOWSIZE/4) + -cos(a)*cos(a)*cos(a) - cos(a)*cos(a) + 2*cos(a);
     pts.push_back(p);
   }
-  printf("heart: inititalied with %lu points\n", pts.size());
+  printf("heart inititalied with %lu points\n", pts.size());
 
 }
 
@@ -283,12 +285,13 @@ int main(int argc, char** argv) {
 
   //populate the points 
   initialize_points_random(points, NPOINTS); // Change this based on what you actually want to draw
+  //initialize_points_heart(vector<point2d>& pts, int n); 
   //print_vector("points:", points);
 
-  //compute the convex hull 
-  Rtimer rt1; 
-  rt_start(rt1); 
-  graham_scan(points, hull); 
+  //compute the convex hull - COMMENT BACK IN
+  //Rtimer rt1; 
+  //rt_start(rt1); 
+  /* graham_scan(points, hull); 
   rt_stop(rt1); 
   print_vector("hull:", hull);
   
@@ -296,7 +299,7 @@ int main(int argc, char** argv) {
   char buf [1024]; 
   rt_sprint(buf,rt1);
   printf("hull time:  %s\n\n", buf);
-  fflush(stdout); 
+  fflush(stdout);  */
 
  
   //start the rendering 
