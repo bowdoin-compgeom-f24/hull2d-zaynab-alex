@@ -134,16 +134,16 @@ void initialize_points_heart(vector<point2d>& pts, int n) {
 
   double t = (2*M_PI) / n; // defining step size this way will give us n points
   point2d p;
+  int SCALING_FACTOR = 100; // ensures that the heart is a good size
 
   for (double a = 0; a<2*M_PI; a+=t) {
-    p.x = (WINDOWSIZE/4) + sqrt(2) * sin(a)*sin(a)*sin(a);
-    p.y = (WINDOWSIZE/4) + -cos(a)*cos(a)*cos(a) - cos(a)*cos(a) + 2*cos(a);
+    p.x = WINDOWSIZE/2 + SCALING_FACTOR*(sqrt(2) * sin(a)*sin(a)*sin(a))+ (random() % ((int)(.07*WINDOWSIZE)));
+    p.y = WINDOWSIZE/2 + SCALING_FACTOR*(-cos(a)*cos(a)*cos(a) - cos(a)*cos(a) + 2*cos(a)) + (random() % ((int)(.07*WINDOWSIZE)));
     pts.push_back(p);
   }
   printf("heart inititalied with %lu points\n", pts.size());
 
 }
-
 
 
 /* ****************************** */
@@ -284,8 +284,8 @@ int main(int argc, char** argv) {
   assert(NPOINTS >0); 
 
   //populate the points 
-  initialize_points_random(points, NPOINTS); // Change this based on what you actually want to draw
-  //initialize_points_heart(vector<point2d>& pts, int n); 
+  //initialize_points_random(points, NPOINTS); // Change this based on what you actually want to draw
+  initialize_points_heart(points, NPOINTS); 
   //print_vector("points:", points);
 
   //compute the convex hull - COMMENT BACK IN
