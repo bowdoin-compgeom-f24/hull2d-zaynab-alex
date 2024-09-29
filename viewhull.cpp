@@ -137,12 +137,45 @@ void initialize_points_heart(vector<point2d>& pts, int n) {
   int SCALING_FACTOR = 100; // ensures that the heart is a good size
 
   for (double a = 0; a<2*M_PI; a+=t) {
-    p.x = WINDOWSIZE/2 + SCALING_FACTOR*(sqrt(2) * sin(a)*sin(a)*sin(a))+ (random() % ((int)(.07*WINDOWSIZE)));
-    p.y = WINDOWSIZE/2 + SCALING_FACTOR*(-cos(a)*cos(a)*cos(a) - cos(a)*cos(a) + 2*cos(a)) + (random() % ((int)(.07*WINDOWSIZE)));
+    p.x = (double) WINDOWSIZE/2 + SCALING_FACTOR*(sqrt(2) * sin(a)*sin(a)*sin(a))+ (random() % ((int)(.07*WINDOWSIZE)));
+    p.y = (double) WINDOWSIZE/2 + SCALING_FACTOR*(-cos(a)*cos(a)*cos(a) - cos(a)*cos(a) + 2*cos(a)) + (random() % ((int)(.07*WINDOWSIZE)));
     pts.push_back(p);
   }
   printf("heart inititalied with %lu points\n", pts.size());
+}
 
+void initialize_points_hardcoded(vector<point2d>& pts, int n) {
+
+  printf("\ninitialize points hard-coded\n"); 
+  pts.clear(); // clear it out for safety
+
+  printf("n: %d\n", n);
+
+  point2d point1;
+  point1.x = 150; 
+  point1.y = 100;
+  pts.push_back(point1);
+
+  point2d point2;
+  point2.x = 220; 
+  point2.y = 202;
+  pts.push_back(point2);
+
+  point2d point3;
+  point3.x = 151; 
+  point3.y = 201;
+  pts.push_back(point3);
+
+  point2d point4;
+  point4.x = 152; 
+  point4.y = 300;
+  pts.push_back(point4);
+
+  point2d point5;
+  point5.x = 100; 
+  point5.y = 200;
+  pts.push_back(point5);
+  
 }
 
 
@@ -285,13 +318,16 @@ int main(int argc, char** argv) {
 
   //populate the points 
   //initialize_points_random(points, NPOINTS); // Change this based on what you actually want to draw
-  initialize_points_heart(points, NPOINTS); 
+  //initialize_points_heart(points, NPOINTS); 
   //print_vector("points:", points);
 
+  // initialize some hard-coded points
+  initialize_points_hardcoded(points, NPOINTS);
+
   //compute the convex hull - COMMENT BACK IN
-  //Rtimer rt1; 
-  //rt_start(rt1); 
-  /* graham_scan(points, hull); 
+  Rtimer rt1; 
+  rt_start(rt1); 
+  graham_scan(points, hull); 
   rt_stop(rt1); 
   print_vector("hull:", hull);
   
@@ -299,7 +335,7 @@ int main(int argc, char** argv) {
   char buf [1024]; 
   rt_sprint(buf,rt1);
   printf("hull time:  %s\n\n", buf);
-  fflush(stdout);  */
+  fflush(stdout);  
 
  
   //start the rendering 

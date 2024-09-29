@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <cmath>
 #include <vector>
+#include <cfloat>
 
 using namespace std; 
 
@@ -21,7 +22,6 @@ int signed_area2D(point2d a, point2d b, point2d c) {
   int By = c.y - a.y; 
   return (Ax*By) - (Ay*Bx); 
 }
-
 
 
 /* **************************************** */
@@ -90,33 +90,50 @@ vector<point2d>& initializer(vector<point2d>& pts, vector<point2d>& hull){
 //return 0 and finally if b should sort before a, the compare should return 1.
 
 // define a comparator for the sorting of all our points
-int compare_angles(point2d point1, point2d point2) {
-  double angle1 = atan2((double) (point1.y - p0.y), (double) (point1.x - p0.x));//im a little confused to what atan tells us cuz apparently
-  //it only returns values between -pi/2 and pi/2
-  //if this proves to be problematic we can degrees by multiplying result by 180/pi
+int compare_angles(const void* ppoint1, const void* ppoint2) {
+
+  // redefine point 1 and point 2 as point2d types
+  point2d* ppoint1_tmp = (point2d*) ppoint1;
+  point2d* ppoint2_tmp = (point2d*) ppoint2;
+  point2d point1 = *ppoint1_tmp;
+  point2d point2 = *ppoint2_tmp;
+
+  printf("point1 x being compared: %d\n", point1.x);
+  printf("point1 y being compared: %d\n", point1.y);
+  printf("point2 x being compared: %d\n", point2.x);
+  printf("point2 y being compared: %d\n", point2.y);
+  double angle1 = atan2((double) (point1.y - p0.y), (double) (point1.x - p0.x));
   double angle2 = atan2((double) (point2.y - p0.y), (double) (point2.x - p0.x));
 
   if (angle1 < angle2) {
-    // we want angle1 sorted before angle2
+    printf("angle 1: %f\n", angle1);
+    printf("angle 2: %f\n", angle2);
+    printf("angle 1 < angle 2\n");
+    // we want angle1 (point 1) sorted before angle2 (point 2)
     return -1;
   } 
   if (angle1 > angle2) {
-    // we want angle2 sorted before angle1
+    printf("angle 1: %f\n", angle1);
+    printf("angle 2: %f\n", angle2);
+    printf("angle 1 > angle 2\n");
+    // we want angle2 (point 2) sorted before angle1 (point 1)
     return 1;
   } 
   //dealing with colinear points
   double manhattan_distance_point1 = (point1.x - p0.x) + (point1.y - p0.y);
   double manhattan_distance_point2 = (point2.x - p0.x) + (point2.y - p0.y);
 
-  //if points 1 and 2 are both right of the x value of p0 or have the same x as p0
-  if ((point1.x >= p0.x) && (point2.x >= p0.x) ){
+  //if points 1 and 2 make the same angle and are both right of the x value of p0 or have the same x as p0
+  if ((angle1 == angle2) && (point1.x >= p0.x) && (point2.x >= p0.x)){
     //check which point is closer
     if(manhattan_distance_point1 < manhattan_distance_point2){
       //if point 1 is closer to p0 then sort first
+      printf("on right side, angles are the same, but p1 closer to p0\n");
       return -1;
     }
     else{
       //point 2 is closer so sort it first
+      printf("on right side, angles are the same, but p2 closer to p0\n");
       return 1;
     }
   }
@@ -125,10 +142,12 @@ int compare_angles(point2d point1, point2d point2) {
     //check which point is closer
     if(manhattan_distance_point1 > manhattan_distance_point2){
       //if point 1 is further from p0 so sort it first
+      printf("on right side, angles are the same, but p1 is farther from p0\n");
       return -1;
     }
     else{
       //point 2 is further from p0 so sort it first
+      printf("on right side, angles are the same, but p2 is farther from p0\n");
       return 1;
     }
   }
@@ -151,8 +170,14 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   printf("hull2d (graham scan): start\n"); 
   hull.clear(); //should be empty, but clear it to be safe
 
+  // print all of the points
+  for (int i = 0; i<pts.size(); i++) {
+    printf("x of point: %d\n", pts[i].x);
+    printf("y of point: %d\n", pts[i].y);
+  }
+
   // set point p0 globally
-  int minY = 10000;
+  double minY = DBL_MAX;
   int p0_index;
   for( int i = 0; i < pts.size(); i ++){
     // if it is lower vertically, set it to p0
@@ -161,6 +186,7 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
       p0 = pts[i];
       p0_index = i;
     }
+    
     // if the current min y is the same as running min y set current point -> p0 if it is RIGHT of the running p0
     else if(pts[i].y == minY && pts[i].x > p0.x){
       minY = pts[i].y;
@@ -168,28 +194,58 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
       p0_index = i;
     }
   }
+
   // delete p0 from our pts, since it is guaranteed to be an extreme point and doesn't need sorting
   pts.erase(pts.begin() + p0_index); // TODO test that this is working correctly
 
-  //now we have p0 guaranteed to be on hull
+  //now we have p0 guaranteed to be on the hull, and the remaining points need to be added to hull
   //now we sort points
-  sort(pts.begin(), pts.end(), compare_angles);
+  printf("RIGHT BEFORE SORTING ORDER:\n");
+  // convert vector to an array
+  point2d* pts_array = &pts[0];
+  for (int i = 0; i<pts.size(); i++) {
+    printf("x of point: %d\n", pts[i].x);
+    printf("y of point: %d\n", pts[i].y);
+  }
+  //sort(pts.begin(), pts.end(), compare_angles);  
+  qsort((void*) &pts_array[0], pts.size(), sizeof(point2d), compare_angles);
+  //print points in sorted order
+  printf("SORTED ORDER:\n");
+  for (int i = 0; i<pts.size(); i++) {
+    printf("x of point: %d\n", pts[i].x);
+    printf("y of point: %d\n", pts[i].y);
+  }
+
   //assuming hull is acting as our stack
   hull.push_back(p0);
-  hull.push_back(pts[1]);//does sortedPoints include p0, the index in this line depends on that
-  int top1 = pts.size() - 1;
-  int top2 = pts.size() - 2;
-  for (int i = 3; i < pts.size(); i++){//is it really i = 3?
-    if(left_strictly(pts[top2], pts[top1], pts[i])){//i changed it to strictly_left to deal with colinearity
+  hull.push_back(pts[0]);
+  int i = 1;//does sortedPoints include p0, the index in this line depends on that
+  while (i < pts.size()){
+    printf("loop entered\n");
+    int top1 = hull.size() - 1;
+    int top2 = hull.size() - 2;
+    printf("hull[top2] x: %d\n", hull[top2].x);
+    printf("hull[top2] y: %d\n", hull[top2].y);
+    printf("hull[top1] x: %d\n", hull[top1].x);
+    printf("hull[top1] y: %d\n", hull[top1].y);
+    printf("pts[i] x: %d\n", pts[i].x);
+    printf("pts[i] y: %d\n", pts[i].y);
+    if(left_strictly(hull[top2], hull[top1], pts[i])){//i changed it to strictly_left to deal with colinearity
+      printf("pushing pts[i]\n");
       hull.push_back(pts[i]);
+      i++; // only incremement after push
     }
     else{
+      printf("popping something\n");
+      point2d lastElement = hull.back();
+      printf("element being popped x: %d\n", lastElement.x);
+      printf("element being popped x: %d\n", lastElement.y);
       hull.pop_back();
       //while points[i] is on right of edge a,b OR points[i] is colinear with edge a,b
-      while(!(left_on(pts[top2], pts[top1], pts[i]))){
-        hull.pop_back();
-      }
-      hull.push_back(pts[i]);
+      //while(!(left_on(pts[top2], pts[top1], pts[i]))){
+       // hull.pop_back();
+      //}
+      //hull.push_back(pts[i]);
     }
   }
   //return hull

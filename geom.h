@@ -11,6 +11,10 @@ typedef struct _point2d {
 } point2d;
 
 
+// debug try adding points
+extern vector<point2d>  points;
+
+
 
 /* returns 2 times the signed area of triangle abc. The area is
    positive if c is to the left of ab, 0 if a,b,c are collinear and
