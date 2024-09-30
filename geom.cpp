@@ -56,33 +56,6 @@ int left_on(point2d a, point2d b, point2d c) {
   return 0; 
 }
 
-vector<point2d>& initializer(vector<point2d>& pts, vector<point2d>& hull){
-  printf("hull2d (graham scan): start\n");
-  hull.clear(); //should be empty, but clear it to be safe
-
-
- //just for fun: at the moment we set the hull as the bounding box of
- //pts.  erase this and insert your code instead
-  int x1, x2, y1, y2;
-  if (pts.size() > 0) {
-    x1 = x2 = pts[0].x;
-    y1 = y2 = pts[0].y;
-    
-    for (int i=1; i< pts.size(); i++) {
-      if (pts[i].x < x1) x1 = pts[i].x;
-      if (pts[i].x > x2) x2 = pts[i].x;
-      if (pts[i].y < y1) y1 = pts[i].y;
-      if (pts[i].y > y2) y2 = pts[i].y;
-    }
-    point2d p1 = {x1,y1}, p2 = {x2, y1}, p3 = {x2, y2}, p4 = {x1, y2};
-    hull.push_back(p1);
-    hull.push_back(p2);
-    hull.push_back(p3);
-    hull.push_back(p4);
-  }
-  printf("hull2d (graham scan): end\n");
-  return hull;
-}
 
 
 //how to evaluate whether the value pointed to by a sorts before the value pointed to by b 
@@ -98,24 +71,24 @@ int compare_angles(const void* ppoint1, const void* ppoint2) {
   point2d point1 = *ppoint1_tmp;
   point2d point2 = *ppoint2_tmp;
 
-  printf("point1 x being compared: %d\n", point1.x);
-  printf("point1 y being compared: %d\n", point1.y);
-  printf("point2 x being compared: %d\n", point2.x);
-  printf("point2 y being compared: %d\n", point2.y);
+  //printf("point1 x being compared: %d\n", point1.x);
+  //printf("point1 y being compared: %d\n", point1.y);
+  //printf("point2 x being compared: %d\n", point2.x);
+  //printf("point2 y being compared: %d\n", point2.y);
   double angle1 = atan2((double) (point1.y - p0.y), (double) (point1.x - p0.x));
   double angle2 = atan2((double) (point2.y - p0.y), (double) (point2.x - p0.x));
 
   if (angle1 < angle2) {
-    printf("angle 1: %f\n", angle1);
-    printf("angle 2: %f\n", angle2);
-    printf("angle 1 < angle 2\n");
+    //printf("angle 1: %f\n", angle1);
+    //printf("angle 2: %f\n", angle2);
+    //printf("angle 1 < angle 2\n");
     // we want angle1 (point 1) sorted before angle2 (point 2)
     return -1;
   } 
   if (angle1 > angle2) {
-    printf("angle 1: %f\n", angle1);
-    printf("angle 2: %f\n", angle2);
-    printf("angle 1 > angle 2\n");
+    //printf("angle 1: %f\n", angle1);
+    //printf("angle 2: %f\n", angle2);
+    //printf("angle 1 > angle 2\n");
     // we want angle2 (point 2) sorted before angle1 (point 1)
     return 1;
   } 
@@ -124,16 +97,16 @@ int compare_angles(const void* ppoint1, const void* ppoint2) {
   double manhattan_distance_point2 = (point2.x - p0.x) + (point2.y - p0.y);
 
   //if points 1 and 2 make the same angle and are both right of the x value of p0 or have the same x as p0
-  if ((angle1 == angle2) && (point1.x >= p0.x) && (point2.x >= p0.x)){
+  if ((angle1 == angle2) && (point1.x > p0.x) && (point2.x > p0.x)){
     //check which point is closer
     if(manhattan_distance_point1 < manhattan_distance_point2){
       //if point 1 is closer to p0 then sort first
-      printf("on right side, angles are the same, but p1 closer to p0\n");
+      //printf("on right side, angles are the same, but p1 closer to p0\n");
       return -1;
     }
     else{
       //point 2 is closer so sort it first
-      printf("on right side, angles are the same, but p2 closer to p0\n");
+      //printf("on right side, angles are the same, but p2 closer to p0\n");
       return 1;
     }
   }
@@ -142,12 +115,12 @@ int compare_angles(const void* ppoint1, const void* ppoint2) {
     //check which point is closer
     if(manhattan_distance_point1 > manhattan_distance_point2){
       //if point 1 is further from p0 so sort it first
-      printf("on right side, angles are the same, but p1 is farther from p0\n");
+      //printf("on right side, angles are the same, but p1 is farther from p0\n");
       return -1;
     }
     else{
       //point 2 is further from p0 so sort it first
-      printf("on right side, angles are the same, but p2 is farther from p0\n");
+      //printf("on right side, angles are the same, but p2 is farther from p0\n");
       return 1;
     }
   }
@@ -220,20 +193,32 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   hull.push_back(p0);
   hull.push_back(pts[0]);
   int i = 1;//does sortedPoints include p0, the index in this line depends on that
+  // we dont increment every iteration, because we only want to go to the next element when we add 
+  // a point to the hull, not when we pop one off and backtrack
   while (i < pts.size()){
     printf("loop entered\n");
     int top1 = hull.size() - 1;
     int top2 = hull.size() - 2;
-    printf("hull[top2] x: %d\n", hull[top2].x);
+
+    // experimental debugging
+    if (hull.size() == 1) {
+      printf("hull currently only has p0");
+      hull.push_back(pts[i]);
+      printf("see the hull has 2 elements now");
+      printf("%lu\n", hull.size());
+      i++;
+      continue; 
+    }
+    /* printf("hull[top2] x: %d\n", hull[top2].x);
     printf("hull[top2] y: %d\n", hull[top2].y);
     printf("hull[top1] x: %d\n", hull[top1].x);
     printf("hull[top1] y: %d\n", hull[top1].y);
     printf("pts[i] x: %d\n", pts[i].x);
-    printf("pts[i] y: %d\n", pts[i].y);
+    printf("pts[i] y: %d\n", pts[i].y); */
     if(left_strictly(hull[top2], hull[top1], pts[i])){//i changed it to strictly_left to deal with colinearity
       printf("pushing pts[i]\n");
       hull.push_back(pts[i]);
-      i++; // only incremement after push
+      i++; // only incremement after push 
     }
     else{
       printf("popping something\n");
@@ -248,6 +233,14 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
       //hull.push_back(pts[i]);
     }
   }
+
+  // if there are 3 collinear points at the end, we want to delete the middle one from the hull
+  int hull_size = hull.size();
+  if (collinear(p0, hull[hull_size-1], hull[hull_size-2]) == 1) {
+    printf("conditional entered.\n");
+    hull.pop_back();
+  }
+
   //return hull
   printf("hull2d (graham scan): end\n"); 
   return; 

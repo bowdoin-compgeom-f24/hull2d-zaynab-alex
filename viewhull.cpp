@@ -175,7 +175,60 @@ void initialize_points_hardcoded(vector<point2d>& pts, int n) {
   point5.x = 100; 
   point5.y = 200;
   pts.push_back(point5);
+
+  point2d point6;
+  point5.x = 101; 
+  point5.y = 170;
+  pts.push_back(point6);
+
+}
+
+void initialize_points_hardcoded_triangle(vector<point2d>& pts, int n) {
+
+  printf("\ninitialize points hard-coded\n"); 
+  pts.clear(); // clear it out for safety
+
+  point2d point1;
+  point1.x = 0; 
+  point1.y = 0;
+  pts.push_back(point1);
+
+  point2d point2;
+  point2.x = 50; 
+  point2.y = 50;
+  pts.push_back(point2);
+
+  point2d point3;
+  point3.x = 100; 
+  point3.y = 100;
+  pts.push_back(point3);
+
+  point2d point4;
+  point4.x = 0; 
+  point4.y = 100;
+  pts.push_back(point4);
+
+  point2d point5;
+  point5.x = 0; 
+  point5.y = 50;
+  pts.push_back(point5);
+
+}
+
+void initializer_square(vector<point2d>& pts){
   
+  pts.clear(); //should be empty, but clear it to be safe
+  point2d p;
+  for(int i = 0; i <= 100; i+=20){
+    for(int j = 0; j <= 100; j+=20){
+      if( i== 50 & j ==50){
+        continue;
+      }
+      p.x = i;
+      p.y = j;
+      pts.push_back(p);
+    }
+  }
 }
 
 
@@ -322,7 +375,19 @@ int main(int argc, char** argv) {
   //print_vector("points:", points);
 
   // initialize some hard-coded points
-  initialize_points_hardcoded(points, NPOINTS);
+  //initialize_points_hardcoded(points, NPOINTS);
+
+  // try a square
+  initializer_square(points);
+
+  // try a circle
+  //initialize_points_circle(points, NPOINTS);
+
+  // try a cross
+  //initialize_points_cross(points, NPOINTS);
+
+  // try an edge case - right triangle 
+  //initialize_points_hardcoded_triangle(points, NPOINTS);
 
   //compute the convex hull - COMMENT BACK IN
   Rtimer rt1; 
