@@ -10,6 +10,7 @@ using namespace std;
 
 // GLOBAL VARIABLES
 point2d p0; // location of the bottommost point, guaranteed to be an extreme point
+const double EPSILON = 1 * pow(10,-6);
 
 /* **************************************** */
 /* returns the signed area of triangle abc. The area is positive if c
@@ -28,7 +29,8 @@ int signed_area2D(point2d a, point2d b, point2d c) {
 /* return 1 if p,q,r collinear, and 0 otherwise */
 int collinear(point2d p, point2d q, point2d r) {
   int area = signed_area2D(p, q, r);
-  if (area == 0){
+  int negative_epsilon = -1 * EPSILON;
+  if (negative_epsilon < area  && area < EPSILON){
     return 1;
   }
   return 0;  
@@ -122,16 +124,6 @@ int compare_angles(const void* ppoint1, const void* ppoint2) {
 
 // compute the convex hull of pts, and store the points on the hull in hull
 void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
-  //Algorithm GrahamScan (input: points P )
-    //Find interior point p0 (instead of an interior point, can pick the lowest point)
-    //Sort all other points ccw around p0; denote them p1, p2, ...pn−1 in this order.
-    //Initialize stack S = (p2, p1)
-    //for i = 3 to n-1 do
-     //if pi is left of (second(S), first(S)): 
-        //push pi on S
-     //else:
-       //repeat: pop S while pi is right of (second(S), first(S))
-       //push pi on S
 
   printf("hull2d (graham scan): start\n"); 
   hull.clear(); //should be empty, but clear it to be safe

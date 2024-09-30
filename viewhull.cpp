@@ -215,6 +215,70 @@ void initialize_points_hardcoded_triangle(vector<point2d>& pts, int n) {
 
 }
 
+//ziyou's parallel lines just to test
+void initialize_points_two_vertical(vector<point2d>& pts, int n) {
+  
+  printf("\ninitialize points that make two vertical lines.\n"); 
+    //clear the vector just to be safe 
+  pts.clear(); 
+  
+  point2d p; 
+  for (int i=0; i<n/2; i++) {
+    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
+    p.x =  WINDOWSIZE/2; 
+    pts.push_back(p); 
+  }
+    for (int i=0; i<n/2; i++) {
+    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
+    p.x =  WINDOWSIZE/4; 
+    pts.push_back(p); 
+  }
+}
+
+//another edge case
+void initialize_another_triangle(vector<point2d>& pts, int n){
+  point2d point1;
+  point1.x = 400; 
+  point1.y = 50;
+  pts.push_back(point1);
+
+  point2d point2;
+  point2.x = 400; 
+  point2.y = 150;
+  pts.push_back(point2);
+
+  point2d point3;
+  point3.x = 400; 
+  point3.y = 200;
+  pts.push_back(point3);
+
+  point2d point4;
+  point4.x = 400; 
+  point4.y = 400;
+  pts.push_back(point4);
+
+  point2d point5;
+  point5.x = 200; 
+  point5.y = 400;
+  pts.push_back(point5);
+
+  point2d point6;
+  point6.x = 150; 
+  point6.y = 400;
+  pts.push_back(point6);
+
+  point2d point7;
+  point7.x = 100; 
+  point7.y = 400;
+  pts.push_back(point7);
+
+  point2d point8;
+  point8.x = 50; 
+  point8.y = 400;
+  pts.push_back(point8);
+  printf("this is the right triangle");
+}
+
 void initializer_square(vector<point2d>& pts){
   
   pts.clear(); //should be empty, but clear it to be safe
@@ -284,6 +348,41 @@ void initialize_points_horizontal_line(vector<point2d>& pts, int n) {
   }
 }
 
+//tom's example
+void initialize_points_2(vector<point2d>&pts, int n){
+  printf("\ninitialize points 2\n"); 
+  pts.clear();
+  assert(pts.size() == 0);
+
+  point2d p;
+  int x_noise, y_noise;
+  int pos, pos2;
+  for (int i = 0; i < n; i++)
+  {
+    switch (i % 3) {
+      case 0:
+        p.x = (int)(0.25*WINDOWSIZE) + random() % ((int)(0.5*WINDOWSIZE));
+        p.y = (int) (0.15*WINDOWSIZE);
+        break;
+      case 1:
+        pos = random() % (int)(0.5*WINDOWSIZE);
+        p.x = pos; p.y = pos;
+        p.x += (int) (0.25*WINDOWSIZE);
+        p.y += (int) (0.15*WINDOWSIZE);
+        break;
+      case 2: 
+        pos2 = random() % 180;
+        p.x = (int)(0.5 * WINDOWSIZE) + (int) ((0.25*WINDOWSIZE) * cos((M_PI * pos2)/180));
+        p.y = (int)(0.65 * WINDOWSIZE) + (int) ((0.25*WINDOWSIZE) * sin((M_PI * pos2)/180));
+        break;
+    }
+    x_noise = random() % ((int) (0.05*WINDOWSIZE));
+    y_noise = random() % ((int) (0.05*WINDOWSIZE));
+    p.x += x_noise;
+    p.y += y_noise;
+    pts.push_back(p);
+  }
+}
 
 
 
@@ -384,11 +483,20 @@ int main(int argc, char** argv) {
   //initialize_points_circle(points, NPOINTS);
 
   // try a cross
-  initialize_points_cross(points, NPOINTS);
+  //initialize_points_cross(points, NPOINTS);
 
   // try an edge case - right triangle 
   //initialize_points_hardcoded_triangle(points, NPOINTS);
 
+  //try another triangle
+  //initialize_another_triangle(points, NPOINTS);
+
+  //try ziyou's code of 2 parallel lines
+  //initialize_points_two_vertical(points, NPOINTS);
+
+  //try tom's example
+  initialize_points_2(points, NPOINTS);
+  
   //compute the convex hull - COMMENT BACK IN
   Rtimer rt1; 
   rt_start(rt1); 
