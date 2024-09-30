@@ -137,8 +137,8 @@ void initialize_points_heart(vector<point2d>& pts, int n) {
   int SCALING_FACTOR = 100; // ensures that the heart is a good size
 
   for (double a = 0; a<2*M_PI; a+=t) {
-    p.x = (double) WINDOWSIZE/2 + SCALING_FACTOR*(sqrt(2) * sin(a)*sin(a)*sin(a))+ (random() % ((int)(.07*WINDOWSIZE)));
-    p.y = (double) WINDOWSIZE/2 + SCALING_FACTOR*(-cos(a)*cos(a)*cos(a) - cos(a)*cos(a) + 2*cos(a)) + (random() % ((int)(.07*WINDOWSIZE)));
+    p.x = WINDOWSIZE/2 + SCALING_FACTOR*(sqrt(2) * sin(a)*sin(a)*sin(a))+ (random() % ((int)(.07*WINDOWSIZE)));
+    p.y = WINDOWSIZE/2 + SCALING_FACTOR*(-cos(a)*cos(a)*cos(a) - cos(a)*cos(a) + 2*cos(a)) + (random() % ((int)(.07*WINDOWSIZE)));
     pts.push_back(p);
   }
   printf("heart inititalied with %lu points\n", pts.size());
@@ -378,13 +378,13 @@ int main(int argc, char** argv) {
   //initialize_points_hardcoded(points, NPOINTS);
 
   // try a square
-  initializer_square(points);
+  //initializer_square(points);
 
   // try a circle
   //initialize_points_circle(points, NPOINTS);
 
   // try a cross
-  //initialize_points_cross(points, NPOINTS);
+  initialize_points_cross(points, NPOINTS);
 
   // try an edge case - right triangle 
   //initialize_points_hardcoded_triangle(points, NPOINTS);

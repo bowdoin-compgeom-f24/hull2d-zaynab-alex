@@ -97,34 +97,27 @@ int compare_angles(const void* ppoint1, const void* ppoint2) {
   double manhattan_distance_point2 = (point2.x - p0.x) + (point2.y - p0.y);
 
   //if points 1 and 2 make the same angle and are both right of the x value of p0 or have the same x as p0
-  if ((angle1 == angle2) && (point1.x > p0.x) && (point2.x > p0.x)){
+  if (angle1 == angle2){
     //check which point is closer
     if(manhattan_distance_point1 < manhattan_distance_point2){
       //if point 1 is closer to p0 then sort first
       //printf("on right side, angles are the same, but p1 closer to p0\n");
       return -1;
     }
-    else{
-      //point 2 is closer so sort it first
-      //printf("on right side, angles are the same, but p2 closer to p0\n");
-      return 1;
-    }
-  }
-  //if points 1 and 2 are left of the x value of p0
-  else{
-    //check which point is closer
-    if(manhattan_distance_point1 > manhattan_distance_point2){
-      //if point 1 is further from p0 so sort it first
-      //printf("on right side, angles are the same, but p1 is farther from p0\n");
-      return -1;
-    }
-    else{
-      //point 2 is further from p0 so sort it first
-      //printf("on right side, angles are the same, but p2 is farther from p0\n");
-      return 1;
-    }
-  }
 
+    if (manhattan_distance_point1 == manhattan_distance_point2) {
+      // points are the same. Mark one of them for deletion (TODO)
+      printf("implement this later.\n");
+      return -1; // change this later
+    }
+
+    if (manhattan_distance_point1 > manhattan_distance_point2) {
+      return 1;
+    }
+  }
+  // it should never reach here, but compiler needs a return statement here
+  printf("should never reach here.\n");
+  return 0;
 }
 
 // compute the convex hull of pts, and store the points on the hull in hull
