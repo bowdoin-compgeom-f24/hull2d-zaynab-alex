@@ -29,8 +29,7 @@ int signed_area2D(point2d a, point2d b, point2d c) {
 /* return 1 if p,q,r collinear, and 0 otherwise */
 int collinear(point2d p, point2d q, point2d r) {
   int area = signed_area2D(p, q, r);
-  int negative_epsilon = -1 * EPSILON;
-  if (negative_epsilon < area  && area < EPSILON){
+  if (area == 0){
     return 1;
   }
   return 0;  
@@ -187,9 +186,9 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
 
     // experimental debugging
     if (hull.size() == 1) {
-      printf("hull currently only has p0");
+      printf("hull currently only has p0\n");
       hull.push_back(pts[i]);
-      printf("see the hull has 2 elements now");
+      printf("see the hull has 2 elements now\n");
       printf("%lu\n", hull.size());
       i++;
       continue; 

@@ -276,18 +276,24 @@ void initialize_another_triangle(vector<point2d>& pts, int n){
   point8.x = 50; 
   point8.y = 400;
   pts.push_back(point8);
+
+  point2d point9;
+  point9.x = 400; 
+  point9.y = 200;
+  pts.push_back(point9);
   printf("this is the right triangle");
 }
 
 void initializer_square(vector<point2d>& pts){
   
   pts.clear(); //should be empty, but clear it to be safe
-  point2d p;
+  //point2d p;
   for(int i = 0; i <= 100; i+=20){
     for(int j = 0; j <= 100; j+=20){
       if( i== 50 & j ==50){
         continue;
       }
+      point2d p;
       p.x = i;
       p.y = j;
       pts.push_back(p);
@@ -486,7 +492,7 @@ int main(int argc, char** argv) {
   //initialize_points_cross(points, NPOINTS);
 
   // try an edge case - right triangle 
-  //initialize_points_hardcoded_triangle(points, NPOINTS);
+  initialize_points_hardcoded_triangle(points, NPOINTS);
 
   //try another triangle
   //initialize_another_triangle(points, NPOINTS);
@@ -495,8 +501,8 @@ int main(int argc, char** argv) {
   //initialize_points_two_vertical(points, NPOINTS);
 
   //try tom's example
-  initialize_points_2(points, NPOINTS);
-  
+  //initialize_points_2(points, NPOINTS);
+
   //compute the convex hull - COMMENT BACK IN
   Rtimer rt1; 
   rt_start(rt1); 
