@@ -566,7 +566,6 @@ void display(void) {
   //first translate the points to [-WINDOWSIZE/2, WINDOWSIZE/2]
 
   glTranslatef(-WINDOWSIZE/2, -WINDOWSIZE/2, 0); 
-  // TODO: CHANGED THIS! DELETE THE LINE BELOW, COMMENT IN THE ONE ABOVE!
  
   draw_points(points);
   draw_hull(hull); 
