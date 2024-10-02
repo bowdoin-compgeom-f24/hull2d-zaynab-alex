@@ -378,41 +378,7 @@ void initialize_points_vertical_line(vector<point2d>& pts, int n) {
   }
 }
 
-//tom's example
-void initialize_points_2(vector<point2d>&pts, int n){
-  printf("\ninitialize points 2\n"); 
-  pts.clear();
-  assert(pts.size() == 0);
 
-  point2d p;
-  int x_noise, y_noise;
-  int pos, pos2;
-  for (int i = 0; i < n; i++)
-  {
-    switch (i % 3) {
-      case 0:
-        p.x = (int)(0.25*WINDOWSIZE) + random() % ((int)(0.5*WINDOWSIZE));
-        p.y = (int) (0.15*WINDOWSIZE);
-        break;
-      case 1:
-        pos = random() % (int)(0.5*WINDOWSIZE);
-        p.x = pos; p.y = pos;
-        p.x += (int) (0.25*WINDOWSIZE);
-        p.y += (int) (0.15*WINDOWSIZE);
-        break;
-      case 2: 
-        pos2 = random() % 180;
-        p.x = (int)(0.5 * WINDOWSIZE) + (int) ((0.25*WINDOWSIZE) * cos((M_PI * pos2)/180));
-        p.y = (int)(0.65 * WINDOWSIZE) + (int) ((0.25*WINDOWSIZE) * sin((M_PI * pos2)/180));
-        break;
-    }
-    x_noise = random() % ((int) (0.05*WINDOWSIZE));
-    y_noise = random() % ((int) (0.05*WINDOWSIZE));
-    p.x += x_noise;
-    p.y += y_noise;
-    pts.push_back(p);
-  }
-}
 
 
 
@@ -467,6 +433,87 @@ void initialize_points_cross(vector<point2d>& pts, int n) {
   }//for i
 
 }
+
+
+//////////////////////// 5 TEST CASES FROM THE CLASS ////////////////////////
+
+
+//1. tom's example
+void initialize_points_2(vector<point2d>&pts, int n){
+  printf("\ninitialize points 2\n"); 
+  pts.clear();
+  assert(pts.size() == 0);
+
+  point2d p;
+  int x_noise, y_noise;
+  int pos, pos2;
+  for (int i = 0; i < n; i++)
+  {
+    switch (i % 3) {
+      case 0:
+        p.x = (int)(0.25*WINDOWSIZE) + random() % ((int)(0.5*WINDOWSIZE));
+        p.y = (int) (0.15*WINDOWSIZE);
+        break;
+      case 1:
+        pos = random() % (int)(0.5*WINDOWSIZE);
+        p.x = pos; p.y = pos;
+        p.x += (int) (0.25*WINDOWSIZE);
+        p.y += (int) (0.15*WINDOWSIZE);
+        break;
+      case 2: 
+        pos2 = random() % 180;
+        p.x = (int)(0.5 * WINDOWSIZE) + (int) ((0.25*WINDOWSIZE) * cos((M_PI * pos2)/180));
+        p.y = (int)(0.65 * WINDOWSIZE) + (int) ((0.25*WINDOWSIZE) * sin((M_PI * pos2)/180));
+        break;
+    }
+    x_noise = random() % ((int) (0.05*WINDOWSIZE));
+    y_noise = random() % ((int) (0.05*WINDOWSIZE));
+    p.x += x_noise;
+    p.y += y_noise;
+    pts.push_back(p);
+  }
+}
+
+//2. Max and Abhi
+void initialize_points_thin_cross(vector<point2d>&pts, int n) {
+  printf("\ninitialize points thin cross\n");
+  pts.clear();
+  point2d p;
+  for (int i = 0; i < n; i++) {
+    // put points on horizontal line
+    if (i % 2 == 0) {
+      p.x = random() % (int)(WINDOWSIZE);
+      p.y = WINDOWSIZE/2;
+    }
+    // put points on vertical line
+    if (i % 2 == 1) {
+      p.x = WINDOWSIZE/2;
+      p.y = random() % (int)(WINDOWSIZE);
+    }
+    pts.push_back(p);
+  }
+}
+
+//3. Leah
+void initialize_points_stripes(vector<point2d>& pts, int n) {
+  printf("\ninitialize points stripes\n"); 
+  pts.clear();
+  double step = WINDOWSIZE/n;
+  n = n/2;
+
+  point2d p;
+  point2d q; 
+  for (int i = 0; i < n; i++) {
+    float t = step*i;
+    p.x = t + WINDOWSIZE/4;
+    p.y = t + WINDOWSIZE/5;
+    q.x = t + WINDOWSIZE/4;
+    q.y = t + 2*WINDOWSIZE/5;
+    pts.push_back(p); 
+    pts.push_back(q); 
+  }
+}
+
 
 
 
@@ -524,14 +571,21 @@ int main(int argc, char** argv) {
   //try ziyou's code of 2 parallel lines
   //initialize_points_two_vertical(points, NPOINTS);
 
-  //try tom's example
-  //initialize_points_2(points, NPOINTS);
-
   // try a horizontal line
   // initialize_points_horizontal_line(points, NPOINTS);
 
   // try a vertical line
   //initialize_points_vertical_line(points, NPOINTS);
+
+  //try tom's example
+  //initialize_points_2(points, NPOINTS);
+
+  //try Max and Abhi's example
+  //initialize_points_thin_cross(points, NPOINTS);
+
+  // try Leahs's example
+  initialize_points_stripes(points, NPOINTS);
+
 
   //compute the convex hull - COMMENT BACK IN
   Rtimer rt1; 
