@@ -94,25 +94,19 @@ int compare_angles(const void* ppoint1, const void* ppoint2) {
     return 1;
   } 
   //dealing with colinear points
-  double manhattan_distance_point1 = (point1.x - p0.x) + (point1.y - p0.y);
-  double manhattan_distance_point2 = (point2.x - p0.x) + (point2.y - p0.y);
+  int manhattan_distance_point1 = abs((point1.x - p0.x) + (point1.y - p0.y));
+  int manhattan_distance_point2 = abs((point2.x - p0.x) + (point2.y - p0.y));
 
   //if points 1 and 2 make the same angle and are both right of the x value of p0 or have the same x as p0
   if (angle1 == angle2){
     //check which point is closer
-    if(manhattan_distance_point1 < manhattan_distance_point2){
+    if((manhattan_distance_point1 < manhattan_distance_point2) || (manhattan_distance_point1 == manhattan_distance_point2)){
       //if point 1 is closer to p0 then sort first
       //printf("on right side, angles are the same, but p1 closer to p0\n");
       return -1;
     }
 
-    if (manhattan_distance_point1 == manhattan_distance_point2) {
-      // points are the same. Mark one of them for deletion (TODO)
-      printf("implement this later.\n");
-      return -1; // change this later
-    }
-
-    if (manhattan_distance_point1 > manhattan_distance_point2) {
+    else{ //manhattan_distance_point > manhattan_distance_point2
       return 1;
     }
   }
@@ -168,6 +162,8 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   qsort((void*) &pts_array[0], pts.size(), sizeof(point2d), compare_angles);
   //print points in sorted order
   printf("SORTED ORDER:\n");
+  printf("PO x: %d\n", p0.x);
+  printf("PO y: %d\n", p0.y);
   for (int i = 0; i<pts.size(); i++) {
     printf("x of point: %d\n", pts[i].x);
     printf("y of point: %d\n", pts[i].y);
@@ -219,11 +215,12 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   }
 
   // if there are 3 collinear points at the end, we want to delete the middle one from the hull
-  int hull_size = hull.size();
+  // TODO - do we need this? 
+  /* int hull_size = hull.size();
   if (collinear(p0, hull[hull_size-1], hull[hull_size-2]) == 1) {
     printf("conditional entered.\n");
     hull.pop_back();
-  }
+  } */
 
   //return hull
   printf("hull2d (graham scan): end\n"); 

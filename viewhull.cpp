@@ -354,6 +354,21 @@ void initialize_points_horizontal_line(vector<point2d>& pts, int n) {
   }
 }
 
+// same as above, but for a vertical line
+void initialize_points_vertical_line(vector<point2d>& pts, int n) {
+
+  printf("\ninitialize points vertical line\n"); 
+  //clear the vector just to be safe 
+  pts.clear(); 
+  
+  point2d p; 
+  for (int i=0; i<n; i++) {
+    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
+    p.x =  WINDOWSIZE/2; 
+    pts.push_back(p); 
+  }
+}
+
 //tom's example
 void initialize_points_2(vector<point2d>&pts, int n){
   printf("\ninitialize points 2\n"); 
@@ -492,7 +507,7 @@ int main(int argc, char** argv) {
   //initialize_points_cross(points, NPOINTS);
 
   // try an edge case - right triangle 
-  initialize_points_hardcoded_triangle(points, NPOINTS);
+  //initialize_points_hardcoded_triangle(points, NPOINTS);
 
   //try another triangle
   //initialize_another_triangle(points, NPOINTS);
@@ -502,6 +517,12 @@ int main(int argc, char** argv) {
 
   //try tom's example
   //initialize_points_2(points, NPOINTS);
+
+  // try a horizontal line
+  // initialize_points_horizontal_line(points, NPOINTS);
+
+  // try a vertical line
+  initialize_points_vertical_line(points, NPOINTS);
 
   //compute the convex hull - COMMENT BACK IN
   Rtimer rt1; 
