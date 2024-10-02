@@ -126,7 +126,9 @@ void initialize_points_heart(vector<point2d>& pts, int n);
 
 /********************************************************************/
 
-
+/* initializes n points in the shape of a heart
+ * used equation from Wolfram MathWorld
+ */
 void initialize_points_heart(vector<point2d>& pts, int n) {
 
   printf("\ninitialize points heart\n"); 
@@ -284,20 +286,27 @@ void initialize_another_triangle(vector<point2d>& pts, int n){
   printf("this is the right triangle");
 }
 
-void initializer_square(vector<point2d>& pts){
+/*this initializer will always make 25 hardcoded points that are meant to test collinearity
+ * user can input a number for parameter n and n points will be created in addition to the
+ * 25 original points 
+ */
+void initializer_square(vector<point2d>& pts, int n_additional_points){
   
   pts.clear(); //should be empty, but clear it to be safe
-  //point2d p;
-  for(int i = 0; i <= 100; i+=20){
-    for(int j = 0; j <= 100; j+=20){
-      if( i== 50 & j ==50){
-        continue;
-      }
+  for(int i = 200; i <= 300; i+=20){
+    for(int j = 200; j <= 300; j+=20){
       point2d p;
       p.x = i;
       p.y = j;
       pts.push_back(p);
     }
+  }
+  //we are using user input to create n points in addition to our hard coded collinear points
+  for (int i=0; i<(n_additional_points); i++) {
+    point2d p_rand;
+    p_rand.x = (int)200 + random() % ((int)(100)); 
+    p_rand.y =  (int)200 + random() % ((int)(100));
+    pts.push_back(p_rand); 
   }
 }
 
@@ -491,14 +500,14 @@ int main(int argc, char** argv) {
 
   //populate the points 
   //initialize_points_random(points, NPOINTS); // Change this based on what you actually want to draw
-  //initialize_points_heart(points, NPOINTS); 
+  initialize_points_heart(points, NPOINTS); 
   //print_vector("points:", points);
 
   // initialize some hard-coded points
   //initialize_points_hardcoded(points, NPOINTS);
 
   // try a square
-  //initializer_square(points);
+  //initializer_square(points, NPOINTS);
 
   // try a circle
   //initialize_points_circle(points, NPOINTS);
@@ -522,7 +531,7 @@ int main(int argc, char** argv) {
   // initialize_points_horizontal_line(points, NPOINTS);
 
   // try a vertical line
-  initialize_points_vertical_line(points, NPOINTS);
+  //initialize_points_vertical_line(points, NPOINTS);
 
   //compute the convex hull - COMMENT BACK IN
   Rtimer rt1; 
