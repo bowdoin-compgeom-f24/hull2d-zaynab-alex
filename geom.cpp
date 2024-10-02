@@ -13,8 +13,20 @@ point2d p0; // location of the bottommost point, guaranteed to be an extreme poi
 const double EPSILON = 1 * pow(10,-6);
 
 /* **************************************** */
-/* returns the signed area of triangle abc. The area is positive if c
-   is to the left of ab, and negative if c is to the right of ab
+/* 
+ *signed_area2D - this function finds the signed
+ *area of the triangle abc. The area is positive if c
+ *is to the left of ab, and negative if c is to the right of ab
+ *
+ *
+ *Parameters:
+ *-a: a point in the triangle we are taking the signed_area of  
+ *-b: a point in the triangle we are taking the signed_area of
+ *-c: a point in the triangle we are taking the signed_area of
+ *
+ *Return:
+ *
+ * the signed area of triangle abc 
  */
 int signed_area2D(point2d a, point2d b, point2d c) {
   int Ax = b.x - a.x; 
@@ -26,7 +38,19 @@ int signed_area2D(point2d a, point2d b, point2d c) {
 
 
 /* **************************************** */
-/* return 1 if p,q,r collinear, and 0 otherwise */
+/* 
+ *collinear - this function determines if points a, b, and c
+ *are collinear
+ *
+ *Parameters:
+ *-a: a point we are checking for collinearity 
+ *-b: a point we are checking for collinearity
+ *-c: a point we are checking for collinearity
+ *
+ *Return:
+ *
+ * 1 if p,q,r collinear, and 0 otherwise 
+ */
 int collinear(point2d p, point2d q, point2d r) {
   int area = signed_area2D(p, q, r);
   if (area == 0){
@@ -38,7 +62,19 @@ int collinear(point2d p, point2d q, point2d r) {
 
 
 /* **************************************** */
-/* return 1 if c is  strictly left of ab; 0 otherwise */
+/* 
+ *left_strictly - this function determines if point c is strictly left
+ *of the line segment created by points a and b
+ *
+ *Parameters:
+ *-a: one of the points creating the line segment
+ *-b: one of the points creating the line segment
+ *-c: the point we are checking is left of line segment ab
+ *
+ *Return:
+ *
+ * 1 if c is strictly left of ab; 0 otherwise 
+ */
 int left_strictly(point2d a, point2d b, point2d c) {
   int area = signed_area2D(a, b, c);
   if (area > 0){
@@ -47,8 +83,20 @@ int left_strictly(point2d a, point2d b, point2d c) {
   return 0; 
 }
 
-
-/* return 1 if c is left of ab or on ab; 0 otherwise */
+/* **************************************** */
+/* 
+ *left_on - this function determines if point c is left
+ *of or on the line segment created by points a and b
+ *
+ *Parameters:
+ *-a: one of the points creating the line segment
+ *-b: one of the points creating the line segment
+ *-c: the point we are checking is left of or on line segment ab
+ *
+ *Return:
+ *
+ * 1 if c is left of ab or on ab; 0 otherwise 
+ */
 int left_on(point2d a, point2d b, point2d c) {
   int area = signed_area2D(a, b, c);
   if (area >= 0){
@@ -63,7 +111,20 @@ int left_on(point2d a, point2d b, point2d c) {
 //(in which case the compare function should return -1). If the values are equal, then it should 
 //return 0 and finally if b should sort before a, the compare should return 1.
 
-// define a comparator for the sorting of all our points
+/* **************************************** */
+/* 
+ *compare_angles - this function is a comparator that compares 2
+ *points ppoint1 and ppoint2 to determine which should be sorted first
+ *
+ *Parameters:
+ *-ppoint1: one of the points being compared
+ *-ppoint2: one of the points being compared
+ *
+ *Return:
+ *
+ * -1 if ppoint1 should be sorted first
+ * 1 if ppoint2 should be sorted first 
+ */
 int compare_angles(const void* ppoint1, const void* ppoint2) {
 
   // redefine point 1 and point 2 as point2d types
@@ -100,27 +161,33 @@ int compare_angles(const void* ppoint1, const void* ppoint2) {
   //if points 1 and 2 make the same angle and are both right of the x value of p0 or have the same x as p0
   if (angle1 == angle2){
     //check which point is closer
-    if(manhattan_distance_point1 < manhattan_distance_point2){
+    if((manhattan_distance_point1 < manhattan_distance_point2) || (manhattan_distance_point1 == manhattan_distance_point2)){
       //if point 1 is closer to p0 then sort first
       //printf("on right side, angles are the same, but p1 closer to p0\n");
+      //OR // points are the same. Mark one of them for deletion (TODO)
       return -1;
     }
-
-    if (manhattan_distance_point1 == manhattan_distance_point2) {
-      // points are the same. Mark one of them for deletion (TODO)
-      printf("implement this later.\n");
-      return -1; // change this later
-    }
-
-    if (manhattan_distance_point1 > manhattan_distance_point2) {
+    //manhattan_distance_point1 > manhattan_distance_point2
+    else{
       return 1;
-    }
+    } 
   }
   // it should never reach here, but compiler needs a return statement here
   printf("should never reach here.\n");
   return 0;
 }
 
+
+/* **************************************** */
+/* 
+ *graham_scan - this computes the convex hull of a vector of points
+ *
+ *Parameters:
+ *-pts: the vector of points that the hull is being computed for
+ *-hull: a stack datastructure we are using to pop and push points
+ * on the hull
+ *
+ */
 // compute the convex hull of pts, and store the points on the hull in hull
 void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
 
