@@ -86,7 +86,7 @@ const int WINDOWSIZE = 500;
    user can cycle through them by pressing 'i'. Check out the display()
    function.
 */
-int NB_INIT_CHOICES = 4; 
+int NB_INIT_CHOICES = 5; 
 int  POINT_INIT_MODE = 0; //the first inititalizer
 
 
@@ -514,8 +514,50 @@ void initialize_points_stripes(vector<point2d>& pts, int n) {
   }
 }
 
+// 4. David
+/* ****************************** */
+/* Initializes pts with n points forming a spiral shape. 
+   The points are in the range [0, WINSIZE] x [0, WINSIZE].
+*/ 
+void initialize_points_spiral(vector<point2d>& pts, int n) {
+    printf("\ninitialize points spiral\n");
+    pts.clear(); 
 
+    double centerX = WINDOWSIZE / 2; // center of circle
+    double centerY = WINDOWSIZE / 2; // center of circle
+    
+    double theta_increment = 1 / M_PI; // angle increment for the spiral
+    double max_radius = WINDOWSIZE / 2.5; // maximum radius to keep the spiral within bounds
+    double radius_increment = max_radius / (n / 10.0); // increment based on number of points
 
+    for (int i = 0; i < n; i++) {
+        double theta = i * theta_increment * 0.5; // angle increases as i increases
+        double radius = radius_increment * i * 0.1; // scale the radius to keep it spiral-like
+        radius = fmin(radius, max_radius);  // ensures the radius doesn't exceed the boundary
+
+        point2d p;
+        p.x = centerX + radius * cos(theta); 
+        p.y = centerY + radius * sin(theta); 
+        
+        pts.push_back(p); 
+    }
+}
+
+// 5. Manny and Jack
+void initialize_points_wave(vector<point2d>& pts, int n){
+printf("\ninitialize points wave\n");
+  //clear the vector just to be safe
+  pts.clear();
+  double step = (double)WINDOWSIZE / n;
+  double amplitude = 100;  // Height of the wave
+  double frequency = 0.1;  // Controls the number of waves
+  point2d p;
+  for (int i = 0; i < n; ++i) {
+    p.x = i * step;
+    p.y = WINDOWSIZE / 2 + amplitude * sin(frequency * p.x);
+    pts.push_back(p);
+  }
+}
 
 
 /* ****************************** */
@@ -528,6 +570,8 @@ void print_vector(const char* label, vector<point2d> points) {
   }
   printf("\n");
 }
+
+
 
 
 
@@ -577,17 +621,22 @@ int main(int argc, char** argv) {
   // try a vertical line
   //initialize_points_vertical_line(points, NPOINTS);
 
-  //try tom's example
+  // 1. Tom's example
   //initialize_points_2(points, NPOINTS);
 
-  //try Max and Abhi's example
+  // 2. Max and Abhi's example
   //initialize_points_thin_cross(points, NPOINTS);
 
-  // try Leahs's example
-  initialize_points_stripes(points, NPOINTS);
+  // 3. Leahs's example
+  // initialize_points_stripes(points, NPOINTS);
 
+  // 4. David's example
+  //initialize_points_spiral(points, NPOINTS);
 
-  //compute the convex hull - COMMENT BACK IN
+  // 5. Jack and Manny's example
+  initialize_points_wave(points, NPOINTS);
+
+  //compute the convex hull 
   Rtimer rt1; 
   rt_start(rt1); 
   graham_scan(points, hull); 
@@ -600,7 +649,6 @@ int main(int argc, char** argv) {
   printf("hull time:  %s\n\n", buf);
   fflush(stdout);  
 
- 
   //start the rendering 
   /* initialize GLUT  */
   glutInit(&argc, argv);
@@ -621,8 +669,6 @@ int main(int argc, char** argv) {
   glutMainLoop();
   return 0;
 }
-
-
 
 
 /* ****************************** */
@@ -657,8 +703,6 @@ void display(void) {
   /* execute the drawing commands */
   glFlush();
 }
-
-
 
 
 /* ****************************** */
@@ -746,6 +790,9 @@ void keypress(unsigned char key, int x, int y) {
     case 3: 
       initialize_points_random(points, NPOINTS); 
       break; 
+    case 4: 
+      initialize_points_heart(points, NPOINTS);
+      break;
     } //switch 
     //we changed the points, so we need to recompute the hull
     graham_scan(points, hull); 
