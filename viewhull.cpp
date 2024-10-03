@@ -84,7 +84,7 @@ const int WINDOWSIZE = 500;
    user can cycle through them by pressing 'i'. Check out the display()
    function.
 */
-int NB_INIT_CHOICES = 5; 
+int NB_INIT_CHOICES = 15; 
 int  POINT_INIT_MODE = 0; //the first inititalizer
 
 
@@ -96,7 +96,6 @@ int  POINT_INIT_MODE = 0; //the first inititalizer
 
 //print label, then the vector 
 void print_vector(const char* label, vector<point2d> p); 
-
 
 
 /* render the points. Each point is drawn as a small square.  */
@@ -119,8 +118,21 @@ void initialize_points_random(vector<point2d>&pts, int n) ;
 void initialize_points_cross(vector<point2d>&pts, int n) ;
 
 //you'll add more 
+// our cases
 void initialize_points_heart(vector<point2d>& pts, int n); 
+void initializer_square(vector<point2d>& pts, int n);
 
+// class cases
+void initialize_points_2(vector<point2d>& pts, int n);
+void initialize_points_thin_cross(vector<point2d>& pts, int n);
+void initialize_points_stripes(vector<point2d>& pts, int n);
+void initialize_points_spiral(vector<point2d>& pts, int n);
+void initialize_points_wave(vector<point2d>& pts, int n);
+
+// extra testing cases
+void initialize_points_hardcoded_triangle(vector<point2d>& pts, int n);
+void initialize_points_two_vertical(vector<point2d>& pts, int n);
+void initialize_points_vertical_line(vector<point2d>& pts, int n);
 
 
 /********************************************************************/
@@ -178,6 +190,7 @@ void initialize_points_horizontal_line(vector<point2d>& pts, int n) {
   }
 }
 
+
 /* ****************************** */
 /* Initializes pts with n random points.  The points are in the
    range [0, WINSIZE] x [0, WINSIZE].
@@ -195,8 +208,6 @@ void initialize_points_random(vector<point2d>& pts, int n) {
     pts.push_back(p); 
   }
 }
-
-
 
 
 /* ****************************** */
@@ -232,11 +243,14 @@ void initialize_points_cross(vector<point2d>& pts, int n) {
 
 
 
-//////////////////////// 2 TEST CASES WE WROTE //////////////////////////////
+/* ****************************** */
+/*    Our written initializers    */
+/* ****************************** */
 
-/* initializes n points in the shape of a heart
- * used equation from Wolfram MathWorld
- */
+/* ****************************** */
+/* Initializes n points in the shape of a heart, scaled to fit the majority of the window.
+ * Used equation from Wolfram MathWorld link in slack to specify the heart equation.
+*/ 
 void initialize_points_heart(vector<point2d>& pts, int n) {
 
   printf("\ninitialize points heart\n"); 
@@ -255,10 +269,11 @@ void initialize_points_heart(vector<point2d>& pts, int n) {
 }
 
 
-/*this initializer will always make 25 hardcoded points that are meant to test collinearity
- * user can input a number for parameter n and n points will be created in addition to the
- * 25 original points 
- */
+/* ****************************** */
+/* Initializes a square of 25 hardcoded points, evenly spaced out, in the middle of the window. 
+ * these points are in the form of a square that is 100 x 100. Additionally, adds 
+ * n_additional_points randomly generated to the middle of the square. Tests collinearity. 
+*/ 
 void initializer_square(vector<point2d>& pts, int n_additional_points){
   
   pts.clear(); //should be empty, but clear it to be safe
@@ -279,7 +294,10 @@ void initializer_square(vector<point2d>& pts, int n_additional_points){
   }
 }
 
-//////////////////////// 5 TEST CASES FROM THE CLASS ////////////////////////
+
+/* ****************************** */
+/*  Five initializers from class  */
+/* ****************************** */
 
 //1. tom's example
 void initialize_points_2(vector<point2d>&pts, int n){
@@ -317,7 +335,7 @@ void initialize_points_2(vector<point2d>&pts, int n){
   }
 }
 
-//2. Max and Abhi
+//2. Max and Abhi's example
 void initialize_points_thin_cross(vector<point2d>&pts, int n) {
   printf("\ninitialize points thin cross\n");
   pts.clear();
@@ -337,7 +355,7 @@ void initialize_points_thin_cross(vector<point2d>&pts, int n) {
   }
 }
 
-//3. Leah
+//3. Leah's example
 void initialize_points_stripes(vector<point2d>& pts, int n) {
   printf("\ninitialize points stripes\n"); 
   pts.clear();
@@ -357,7 +375,7 @@ void initialize_points_stripes(vector<point2d>& pts, int n) {
   }
 }
 
-// 4. David
+// 4. David's example
 /* ****************************** */
 /* Initializes pts with n points forming a spiral shape. 
    The points are in the range [0, WINSIZE] x [0, WINSIZE].
@@ -386,7 +404,7 @@ void initialize_points_spiral(vector<point2d>& pts, int n) {
     }
 }
 
-// 5. Manny and Jack
+// 5. Manny and Jack's example
 void initialize_points_wave(vector<point2d>& pts, int n){
 printf("\ninitialize points wave\n");
   //clear the vector just to be safe
@@ -403,50 +421,14 @@ printf("\ninitialize points wave\n");
 }
 
 
-//////////////////////// EXTRA / MISC TEST CASES ////////////////////////
+/* ****************************** */
+/*       extra initializers       */
+/* ****************************** */
 
-
-/*initializes 6 hardcoded points*/
-void initialize_points_hardcoded(vector<point2d>& pts, int n) {
-
-  printf("\ninitialize points hard-coded\n"); 
-  pts.clear(); // clear it out for safety
-
-  printf("n: %d\n", n);
-
-  point2d point1;
-  point1.x = 150; 
-  point1.y = 100;
-  pts.push_back(point1);
-
-  point2d point2;
-  point2.x = 220; 
-  point2.y = 202;
-  pts.push_back(point2);
-
-  point2d point3;
-  point3.x = 151; 
-  point3.y = 201;
-  pts.push_back(point3);
-
-  point2d point4;
-  point4.x = 152; 
-  point4.y = 300;
-  pts.push_back(point4);
-
-  point2d point5;
-  point5.x = 100; 
-  point5.y = 200;
-  pts.push_back(point5);
-
-  point2d point6;
-  point6.x = 101; 
-  point6.y = 170;
-  pts.push_back(point6);
-
-}
-
-/*initializes some hardcoded points in a triangle with collinearity*/
+/* ****************************** */
+/* Initializes 5 points in the shape of a right triangle. This test case is intended to test 
+ * the algorithm for multiple cases of collinearity that could cause problems.
+*/ 
 void initialize_points_hardcoded_triangle(vector<point2d>& pts, int n) {
 
   printf("\ninitialize points hard-coded\n"); 
@@ -478,9 +460,10 @@ void initialize_points_hardcoded_triangle(vector<point2d>& pts, int n) {
   pts.push_back(point5);
 }
 
-/*This is a test case from Ziyou, represents a nice edge case
- * initializes n points in 2 vertical lines
- */ 
+/* ****************************** */
+/* This is a test case from Ziyou, posted in slack. This test case is intended to test 
+ * the algorithm for multiple cases of collinearity that could cause problems.
+*/ 
 void initialize_points_two_vertical(vector<point2d>& pts, int n) {
   
   printf("\ninitialize points that make two vertical lines.\n"); 
@@ -500,7 +483,10 @@ void initialize_points_two_vertical(vector<point2d>& pts, int n) {
   }
 }
 
-/* initialize n vertical points */ 
+/* ****************************** */
+/* Initializes n points in a vertical line: intended to test issues with a single line, i.e. 
+* a shape that only has 2 vertices.
+*/ 
 void initialize_points_vertical_line(vector<point2d>& pts, int n) {
 
   printf("\ninitialize points vertical line\n"); 
@@ -531,8 +517,6 @@ void print_vector(const char* label, vector<point2d> points) {
 
 
 
-
-
 /* ****************************** */
 int main(int argc, char** argv) {
 
@@ -549,57 +533,8 @@ int main(int argc, char** argv) {
    * based off of the initializers defined above 
    */
 
-  // initialize some random points
-  //initialize_points_random(points, NPOINTS);
-
-  // initialize some points in the shape of a heart 
-  //initialize_points_heart(points, NPOINTS); 
-  //populate the points 
-  //initialize_points_random(points, NPOINTS); // Change this based on what you actually want to draw
-  //initialize_points_heart(points, NPOINTS); 
-  //print_vector("points:", points);
-
-  // initialize some hard-coded points
-  //initialize_points_hardcoded(points, NPOINTS);
-
-  // try a square
-  //initializer_square(points, NPOINTS);
-
-  // try a circle
-  //initialize_points_circle(points, NPOINTS);
-
-  // try a cross
-  //initialize_points_cross(points, NPOINTS);
-
-  // try an edge case - right triangle 
-  //initialize_points_hardcoded_triangle(points, NPOINTS);
-
-  //try ziyou's code of 2 parallel lines
-  //initialize_points_two_vertical(points, NPOINTS);
-
-  //try a horizontal line
-  //initialize_points_horizontal_line(points, NPOINTS);
-  // try a horizontal line
-  //initialize_points_horizontal_line(points, NPOINTS);
-
-  //try a vertical line
-  //initialize_points_vertical_line(points, NPOINTS);
-
-  // 1. Tom's example
-  //initialize_points_2(points, NPOINTS);
-
-  // 2. Max and Abhi's example
-  //initialize_points_thin_cross(points, NPOINTS);
-
-  // 3. Leahs's example
-  //initialize_points_stripes(points, NPOINTS);
-  //initialize_points_stripes(points, NPOINTS);
-
-  // 4. David's example
-  //initialize_points_spiral(points, NPOINTS);
-
-  // 5. Jack and Manny's example
-  //initialize_points_wave(points, NPOINTS);
+  // initialize some random points to begin with
+  initialize_points_random(points, NPOINTS);
 
   //compute the convex hull 
   Rtimer rt1; 
@@ -742,6 +677,24 @@ void keypress(unsigned char key, int x, int y) {
     //when the user presses 'i', we want to re-initialize the points and
     //recompute the hull
     POINT_INIT_MODE = (POINT_INIT_MODE+1) % NB_INIT_CHOICES; 
+
+    //
+    void initializer_square(vector<point2d>& pts, int n);
+
+    // class cases
+    void initialize_points_2(vector<point2d>& pts, int n);
+    void initialize_points_thin_cross(vector<point2d>& pts, int n);
+    void initialize_points_stripes(vector<point2d>& pts, int n);
+    void initialize_points_spiral(vector<point2d>& pts, int n);
+    void initialize_points_wave(vector<point2d>& pts, int n);
+
+    // extra testing cases
+    void initialize_points_hardcoded_triangle(vector<point2d>& pts, int n);
+    void initialize_points_two_vertical(vector<point2d>& pts, int n);
+    void initialize_points_vertical_line(vector<point2d>& pts, int n);
+
+    //
+
     switch (POINT_INIT_MODE) {
     case 0: 
       initialize_points_circle(points, NPOINTS); 
@@ -757,6 +710,36 @@ void keypress(unsigned char key, int x, int y) {
       break; 
     case 4: 
       initialize_points_heart(points, NPOINTS);
+      break;
+    case 5: 
+      initializer_square(points, NPOINTS);
+      break;
+    case 6:
+      initialize_points_2(points, NPOINTS);
+      break;
+    case 7: 
+      initialize_points_thin_cross(points, NPOINTS);
+      break;
+    case 8:
+      initialize_points_stripes(points, NPOINTS);
+      break;
+    case 9:
+      initialize_points_spiral(points, NPOINTS);
+      break;
+    case 10:
+      initialize_points_spiral(points, NPOINTS);
+      break;
+    case 11: 
+      initialize_points_wave(points, NPOINTS);
+      break;
+    case 12: 
+      initialize_points_hardcoded_triangle(points, NPOINTS);
+      break;
+    case 13: 
+      initialize_points_two_vertical(points, NPOINTS);
+      break;
+    case 14: 
+      initialize_points_vertical_line(points, NPOINTS);
       break;
 
     } //switch 
