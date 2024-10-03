@@ -75,8 +75,6 @@ vector<point2d>  points;
 //note: needs to be global in order to be rendered
 vector<point2d>  hull; 
 
-double heartrad = 5; // will scale the heart up 5 times
-
 
 
 //window size for the graphics window
@@ -124,191 +122,8 @@ void initialize_points_cross(vector<point2d>&pts, int n) ;
 void initialize_points_heart(vector<point2d>& pts, int n); 
 
 
+
 /********************************************************************/
-
-/* initializes n points in the shape of a heart
- * used equation from Wolfram MathWorld
- */
-void initialize_points_heart(vector<point2d>& pts, int n) {
-
-  printf("\ninitialize points heart\n"); 
-  pts.clear(); // clear it out for safety
-
-  double t = (2*M_PI) / n; // defining step size this way will give us n points
-  point2d p;
-  int SCALING_FACTOR = 100; // ensures that the heart is a good size
-
-  for (double a = 0; a<2*M_PI; a+=t) {
-    p.x = WINDOWSIZE/2 + SCALING_FACTOR*(sqrt(2) * sin(a)*sin(a)*sin(a))+ (random() % ((int)(.07*WINDOWSIZE)));
-    p.y = WINDOWSIZE/2 + SCALING_FACTOR*(-cos(a)*cos(a)*cos(a) - cos(a)*cos(a) + 2*cos(a)) + (random() % ((int)(.07*WINDOWSIZE)));
-    pts.push_back(p);
-  }
-  printf("heart inititalied with %lu points\n", pts.size());
-}
-
-void initialize_points_hardcoded(vector<point2d>& pts, int n) {
-
-  printf("\ninitialize points hard-coded\n"); 
-  pts.clear(); // clear it out for safety
-
-  printf("n: %d\n", n);
-
-  point2d point1;
-  point1.x = 150; 
-  point1.y = 100;
-  pts.push_back(point1);
-
-  point2d point2;
-  point2.x = 220; 
-  point2.y = 202;
-  pts.push_back(point2);
-
-  point2d point3;
-  point3.x = 151; 
-  point3.y = 201;
-  pts.push_back(point3);
-
-  point2d point4;
-  point4.x = 152; 
-  point4.y = 300;
-  pts.push_back(point4);
-
-  point2d point5;
-  point5.x = 100; 
-  point5.y = 200;
-  pts.push_back(point5);
-
-  point2d point6;
-  point5.x = 101; 
-  point5.y = 170;
-  pts.push_back(point6);
-
-}
-
-void initialize_points_hardcoded_triangle(vector<point2d>& pts, int n) {
-
-  printf("\ninitialize points hard-coded\n"); 
-  pts.clear(); // clear it out for safety
-
-  point2d point1;
-  point1.x = 0; 
-  point1.y = 0;
-  pts.push_back(point1);
-
-  point2d point2;
-  point2.x = 50; 
-  point2.y = 50;
-  pts.push_back(point2);
-
-  point2d point3;
-  point3.x = 100; 
-  point3.y = 100;
-  pts.push_back(point3);
-
-  point2d point4;
-  point4.x = 0; 
-  point4.y = 100;
-  pts.push_back(point4);
-
-  point2d point5;
-  point5.x = 0; 
-  point5.y = 50;
-  pts.push_back(point5);
-
-}
-
-//ziyou's parallel lines just to test
-void initialize_points_two_vertical(vector<point2d>& pts, int n) {
-  
-  printf("\ninitialize points that make two vertical lines.\n"); 
-    //clear the vector just to be safe 
-  pts.clear(); 
-  
-  point2d p; 
-  for (int i=0; i<n/2; i++) {
-    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
-    p.x =  WINDOWSIZE/2; 
-    pts.push_back(p); 
-  }
-    for (int i=0; i<n/2; i++) {
-    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
-    p.x =  WINDOWSIZE/4; 
-    pts.push_back(p); 
-  }
-}
-
-//another edge case
-void initialize_another_triangle(vector<point2d>& pts, int n){
-  point2d point1;
-  point1.x = 400; 
-  point1.y = 50;
-  pts.push_back(point1);
-
-  point2d point2;
-  point2.x = 400; 
-  point2.y = 150;
-  pts.push_back(point2);
-
-  point2d point3;
-  point3.x = 400; 
-  point3.y = 200;
-  pts.push_back(point3);
-
-  point2d point4;
-  point4.x = 400; 
-  point4.y = 400;
-  pts.push_back(point4);
-
-  point2d point5;
-  point5.x = 200; 
-  point5.y = 400;
-  pts.push_back(point5);
-
-  point2d point6;
-  point6.x = 150; 
-  point6.y = 400;
-  pts.push_back(point6);
-
-  point2d point7;
-  point7.x = 100; 
-  point7.y = 400;
-  pts.push_back(point7);
-
-  point2d point8;
-  point8.x = 50; 
-  point8.y = 400;
-  pts.push_back(point8);
-
-  point2d point9;
-  point9.x = 400; 
-  point9.y = 200;
-  pts.push_back(point9);
-  printf("this is the right triangle");
-}
-
-/*this initializer will always make 25 hardcoded points that are meant to test collinearity
- * user can input a number for parameter n and n points will be created in addition to the
- * 25 original points 
- */
-void initializer_square(vector<point2d>& pts, int n_additional_points){
-  
-  pts.clear(); //should be empty, but clear it to be safe
-  for(int i = 200; i <= 300; i+=20){
-    for(int j = 200; j <= 300; j+=20){
-      point2d p;
-      p.x = i;
-      p.y = j;
-      pts.push_back(p);
-    }
-  }
-  //we are using user input to create n points in addition to our hard coded collinear points
-  for (int i=0; i<(n_additional_points); i++) {
-    point2d p_rand;
-    p_rand.x = (int)200 + random() % ((int)(100)); 
-    p_rand.y =  (int)200 + random() % ((int)(100));
-    pts.push_back(p_rand); 
-  }
-}
 
 
 /* ****************************** */
@@ -342,9 +157,6 @@ void initialize_points_circle(vector<point2d>& pts, int n) {
 }
 
 
-
-
-
 /* ****************************** */
 /* Initializes pts with n points on a line.  The points are in the
    range [0, WINSIZE] x [0, WINSIZE].
@@ -362,25 +174,6 @@ void initialize_points_horizontal_line(vector<point2d>& pts, int n) {
     pts.push_back(p); 
   }
 }
-
-// same as above, but for a vertical line
-void initialize_points_vertical_line(vector<point2d>& pts, int n) {
-
-  printf("\ninitialize points vertical line\n"); 
-  //clear the vector just to be safe 
-  pts.clear(); 
-  
-  point2d p; 
-  for (int i=0; i<n; i++) {
-    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
-    p.x =  WINDOWSIZE/2; 
-    pts.push_back(p); 
-  }
-}
-
-
-
-
 
 /* ****************************** */
 /* Initializes pts with n random points.  The points are in the
@@ -430,13 +223,60 @@ void initialize_points_cross(vector<point2d>& pts, int n) {
    
     pts.push_back(p); 
     
-  }//for i
+  }
 
 }
 
 
-//////////////////////// 5 TEST CASES FROM THE CLASS ////////////////////////
 
+//////////////////////// 2 TEST CASES WE WROTE //////////////////////////////
+
+/* initializes n points in the shape of a heart
+ * used equation from Wolfram MathWorld
+ */
+void initialize_points_heart(vector<point2d>& pts, int n) {
+
+  printf("\ninitialize points heart\n"); 
+  pts.clear(); // clear it out for safety
+
+  double t = (2*M_PI) / n; // defining step size this way will give us n points
+  point2d p;
+  int SCALING_FACTOR = 100; // ensures that the heart is a good size
+
+  for (double a = 0; a<2*M_PI; a+=t) {
+    p.x = WINDOWSIZE/2 + SCALING_FACTOR*(sqrt(2) * sin(a)*sin(a)*sin(a))+ (random() % ((int)(.07*WINDOWSIZE)));
+    p.y = WINDOWSIZE/2 + SCALING_FACTOR*(-cos(a)*cos(a)*cos(a) - cos(a)*cos(a) + 2*cos(a)) + (random() % ((int)(.07*WINDOWSIZE)));
+    pts.push_back(p);
+  }
+  printf("heart inititalied with %lu points\n", pts.size());
+}
+
+
+/*this initializer will always make 25 hardcoded points that are meant to test collinearity
+ * user can input a number for parameter n and n points will be created in addition to the
+ * 25 original points 
+ */
+void initializer_square(vector<point2d>& pts, int n_additional_points){
+  
+  pts.clear(); //should be empty, but clear it to be safe
+  for(int i = 200; i <= 300; i+=20){
+    for(int j = 200; j <= 300; j+=20){
+      point2d p;
+      p.x = i;
+      p.y = j;
+      pts.push_back(p);
+    }
+  }
+  //we are using user input to create n points in addition to our hard coded collinear points
+  for (int i=0; i<(n_additional_points); i++) {
+    point2d p_rand;
+    p_rand.x = (int)200 + random() % ((int)(100)); 
+    p_rand.y =  (int)200 + random() % ((int)(100));
+    pts.push_back(p_rand); 
+  }
+}
+
+//////////////////////// 5 TEST CASES FROM THE CLASS ////////////////////////
 
 //1. tom's example
 void initialize_points_2(vector<point2d>&pts, int n){
@@ -556,6 +396,115 @@ printf("\ninitialize points wave\n");
     p.x = i * step;
     p.y = WINDOWSIZE / 2 + amplitude * sin(frequency * p.x);
     pts.push_back(p);
+  }
+}
+
+
+//////////////////////// EXTRA / MISC TEST CASES ////////////////////////
+
+
+void initialize_points_hardcoded(vector<point2d>& pts, int n) {
+
+  printf("\ninitialize points hard-coded\n"); 
+  pts.clear(); // clear it out for safety
+
+  printf("n: %d\n", n);
+
+  point2d point1;
+  point1.x = 150; 
+  point1.y = 100;
+  pts.push_back(point1);
+
+  point2d point2;
+  point2.x = 220; 
+  point2.y = 202;
+  pts.push_back(point2);
+
+  point2d point3;
+  point3.x = 151; 
+  point3.y = 201;
+  pts.push_back(point3);
+
+  point2d point4;
+  point4.x = 152; 
+  point4.y = 300;
+  pts.push_back(point4);
+
+  point2d point5;
+  point5.x = 100; 
+  point5.y = 200;
+  pts.push_back(point5);
+
+  point2d point6;
+  point5.x = 101; 
+  point5.y = 170;
+  pts.push_back(point6);
+
+}
+
+void initialize_points_hardcoded_triangle(vector<point2d>& pts, int n) {
+
+  printf("\ninitialize points hard-coded\n"); 
+  pts.clear(); // clear it out for safety
+
+  point2d point1;
+  point1.x = 0; 
+  point1.y = 0;
+  pts.push_back(point1);
+
+  point2d point2;
+  point2.x = 50; 
+  point2.y = 50;
+  pts.push_back(point2);
+
+  point2d point3;
+  point3.x = 100; 
+  point3.y = 100;
+  pts.push_back(point3);
+
+  point2d point4;
+  point4.x = 0; 
+  point4.y = 100;
+  pts.push_back(point4);
+
+  point2d point5;
+  point5.x = 0; 
+  point5.y = 50;
+  pts.push_back(point5);
+}
+
+// This is a test case from Ziyou, represents a nice edge case
+void initialize_points_two_vertical(vector<point2d>& pts, int n) {
+  
+  printf("\ninitialize points that make two vertical lines.\n"); 
+    //clear the vector just to be safe 
+  pts.clear(); 
+  
+  point2d p; 
+  for (int i=0; i<n/2; i++) {
+    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
+    p.x =  WINDOWSIZE/2; 
+    pts.push_back(p); 
+  }
+    for (int i=0; i<n/2; i++) {
+    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
+    p.x =  WINDOWSIZE/4; 
+    pts.push_back(p); 
+  }
+}
+
+// initialize some vertical points
+void initialize_points_vertical_line(vector<point2d>& pts, int n) {
+
+  printf("\ninitialize points vertical line\n"); 
+  //clear the vector just to be safe 
+  pts.clear(); 
+  
+  point2d p; 
+  for (int i=0; i<n; i++) {
+    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
+    p.x =  WINDOWSIZE/2; 
+    pts.push_back(p); 
   }
 }
 
