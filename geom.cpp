@@ -8,7 +8,7 @@
 
 using namespace std; 
 
-// GLOBAL VARIABLES
+// global variables
 point2d p0; // location of the bottommost point, guaranteed to be an extreme point
 
 /* **************************************** */
@@ -113,7 +113,7 @@ int left_on(point2d a, point2d b, point2d c) {
 /* **************************************** */
 /* 
  *compare_angles - this function is a comparator that compares 2
- *points ppoint1 and ppoint2 to determine which should be sorted first
+ *points ppoint1 and ppoint2 to determine which should be sorted first. 
  *
  *Parameters:
  *-ppoint1: one of the points being compared
@@ -121,8 +121,8 @@ int left_on(point2d a, point2d b, point2d c) {
  *
  *Return:
  *
- * -1 if ppoint1 should be sorted first
- * 1 if ppoint2 should be sorted first 
+ * -1 if ppoint1 should be sorted first before ppoint 2
+ * 1 if ppoint2 should be sorted first before ppoint 1 
  */
 int compare_angles(const void* ppoint1, const void* ppoint2) {
 
@@ -145,12 +145,15 @@ int compare_angles(const void* ppoint1, const void* ppoint2) {
     return 1;
   } 
 
-  //measuring manhattan distance of points from p0
+  //measuring manhattan distance of points from p0: in colinear cases, Manhattan distance is fine.
   int manhattan_distance_point1 = abs((point1.x - p0.x) + (point1.y - p0.y));
   int manhattan_distance_point2 = abs((point2.x - p0.x) + (point2.y - p0.y));
+
   //if points 1 and 2 make the same angle/are collinear
   if (angle1 == angle2){
-    //check if point 1 is closer or if they are the same point
+    /* check if point 1 is closer or if they are the same point. Note, if they are the same point,
+    we can add them both to the list of sorted points in any order and if the point is on the 
+    convex hull, only one will be added (not the two duplicates). */
     if((manhattan_distance_point1 < manhattan_distance_point2) || (manhattan_distance_point1 == manhattan_distance_point2)){
       //if so then point 1 should be sorted first
       return -1;
@@ -160,8 +163,8 @@ int compare_angles(const void* ppoint1, const void* ppoint2) {
       return 1;
     } 
   }
-  // it should never reach here, but compiler needs a return statement here
-  printf("should never reach here.\n");
+  // Should never reach here, but compiler needs a return statement here. Warn the user if it does.
+  printf("WARNING: comparator should never reach here.\n");
   return 0;
 }
 
@@ -182,9 +185,11 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   printf("hull2d (graham scan): start\n"); 
   hull.clear(); //should be empty, but clear it to be safe
 
-  // set point p0 globally
+  /* set point p0 globally by looping over all points and finding the minimum. If there is a tie, 
+  chose the rightmost point. */
   double minY = DBL_MAX;
   int p0_index;
+
   for( int i = 0; i < pts.size(); i ++){
     // if it is lower vertically, set it to p0
     if ( pts[i].y < minY){
@@ -193,51 +198,57 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
       p0_index = i;
     }
     
-    // if the current min y is the same as running min y set current point -> p0 if it is RIGHT of the running p0
+    // break the tie as specified above
     else if(pts[i].y == minY && pts[i].x > p0.x){
       minY = pts[i].y;
       p0 = pts[i];
       p0_index = i;
     }
   }
-  //now we have p0 guaranteed to be on the hull
 
-  // delete p0 from our pts, since it is guaranteed to be an extreme point and doesn't need sorting
+  // delete p0 from our pts, P0 is guaranteed to be on the hull (it is an extreme point).
   pts.erase(pts.begin() + p0_index); 
 
-  // convert vector to an array
+  // convert vector to an array and sort, in accordance with qsort()'s requirements. 
   point2d* pts_array = &pts[0];
-  //now we sort points
   qsort((void*) &pts_array[0], pts.size(), sizeof(point2d), compare_angles);
   
-  //push p0 and the first point in sorted pts onto hull
+  //push p0 and the first point in sorted pts onto hull: both guaranteed to be on hull
   hull.push_back(p0);
   hull.push_back(pts[0]);
+
+  /* iterate over all points, pushing the point to the running hull if it makes a left turn, and  
+  popping the previous point if it makes a right turn or no turn (straight path) 
+  (more details on this in the README file). Only increment i to point to the next point if a 
+  point is added to the hull.  */
   int i = 1;
-  // we dont increment every iteration, because we only want to go to the next element when we add 
-  // a point to the hull, not when we pop one off and backtrack
   while (i < pts.size()){
+
     //indices of 2 most recently added points in hull
     int top1 = hull.size() - 1;
     int top2 = hull.size() - 2;
 
-    // if hull size is ever 1 then add the point we are currently looking at
+    /* edge case: if hull size is ever 1 then add the point we are currently looking at, as we 
+    need more than one point to make a "line segment" to compare the next potential point to. */
     if (hull.size() == 1) {
       hull.push_back(pts[i]);
       i++;
       continue; 
     }
-    //check if current point is strictly left of the line between the 2 most recently added points in hull 
+
+    /* If current point is strictly left of the line between the 2 most recently added points in hull, 
+    push it to the hull. */ 
     if(left_strictly(hull[top2], hull[top1], pts[i])){
       hull.push_back(pts[i]);
       i++; // only incremement after push 
     }
-    //if not then pop most recently added point off the hull
+
+    //if not, then pop most recently added point off the hull
     else{
       hull.pop_back();
     }
   }
-
+  
   printf("hull2d (graham scan): end\n"); 
   return; 
 }

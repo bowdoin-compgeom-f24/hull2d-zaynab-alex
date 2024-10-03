@@ -265,7 +265,6 @@ void initialize_points_heart(vector<point2d>& pts, int n) {
     p.y = WINDOWSIZE/2 + SCALING_FACTOR*(-cos(a)*cos(a)*cos(a) - cos(a)*cos(a) + 2*cos(a)) + (random() % ((int)(.07*WINDOWSIZE)));
     pts.push_back(p);
   }
-  printf("heart inititalied with %lu points\n", pts.size());
 }
 
 
@@ -533,7 +532,7 @@ int main(int argc, char** argv) {
    * based off of the initializers defined above 
    */
 
-  // initialize some random points to begin with
+  // NOTE: CHANGE THIS BELOW TO THE SET OF POINTS YOU WANT TO INITIALIZE AND COMPUTE C. HULL FOR
   initialize_points_random(points, NPOINTS);
 
   //compute the convex hull 
@@ -677,23 +676,6 @@ void keypress(unsigned char key, int x, int y) {
     //when the user presses 'i', we want to re-initialize the points and
     //recompute the hull
     POINT_INIT_MODE = (POINT_INIT_MODE+1) % NB_INIT_CHOICES; 
-
-    //
-    void initializer_square(vector<point2d>& pts, int n);
-
-    // class cases
-    void initialize_points_2(vector<point2d>& pts, int n);
-    void initialize_points_thin_cross(vector<point2d>& pts, int n);
-    void initialize_points_stripes(vector<point2d>& pts, int n);
-    void initialize_points_spiral(vector<point2d>& pts, int n);
-    void initialize_points_wave(vector<point2d>& pts, int n);
-
-    // extra testing cases
-    void initialize_points_hardcoded_triangle(vector<point2d>& pts, int n);
-    void initialize_points_two_vertical(vector<point2d>& pts, int n);
-    void initialize_points_vertical_line(vector<point2d>& pts, int n);
-
-    //
 
     switch (POINT_INIT_MODE) {
     case 0: 

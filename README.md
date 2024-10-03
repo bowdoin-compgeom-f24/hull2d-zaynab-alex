@@ -37,9 +37,9 @@ draws the hull created by graham scan.
 
 3. How to run the project: In order to run the project, one should type "./hull 2d n", where n is the 
 number of points one intends to generate. In the main method, specify which point initialization
-configuration you would like to use first. From here, recompute the set of points and find the 
-convex hull using Graham Scan for all the other point initialization configurations, simply 
-press the key "i" repeatedly. This will re-initialize and compute the convex hull for the point 
-configurations: [TODO] in order. Note: for a given set of initialized points, the points in the
-convex hull will be printed out in the output console. 
+configuration you would like to use. In the output console, the convex hull that was computed will 
+be output. 
+
+From here, if desired, to recompute the set of points and find the convex hull using Graham Scan 
+for all the other point initialization configurations, simply press the key "i" repeatedly.
  
