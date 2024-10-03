@@ -540,7 +540,7 @@ int main(int argc, char** argv) {
 
   //populate the points 
   //initialize_points_random(points, NPOINTS); // Change this based on what you actually want to draw
-  initialize_points_heart(points, NPOINTS); 
+  //initialize_points_heart(points, NPOINTS); 
   //print_vector("points:", points);
 
   // initialize some hard-coded points
@@ -565,7 +565,7 @@ int main(int argc, char** argv) {
   //initialize_points_two_vertical(points, NPOINTS);
 
   // try a horizontal line
-  // initialize_points_horizontal_line(points, NPOINTS);
+  //initialize_points_horizontal_line(points, NPOINTS);
 
   // try a vertical line
   //initialize_points_vertical_line(points, NPOINTS);
@@ -577,7 +577,7 @@ int main(int argc, char** argv) {
   //initialize_points_thin_cross(points, NPOINTS);
 
   // 3. Leahs's example
-  // initialize_points_stripes(points, NPOINTS);
+  //initialize_points_stripes(points, NPOINTS);
 
   // 4. David's example
   //initialize_points_spiral(points, NPOINTS);
@@ -742,6 +742,7 @@ void keypress(unsigned char key, int x, int y) {
     case 4: 
       initialize_points_heart(points, NPOINTS);
       break;
+
     } //switch 
     //we changed the points, so we need to recompute the hull
     graham_scan(points, hull); 
