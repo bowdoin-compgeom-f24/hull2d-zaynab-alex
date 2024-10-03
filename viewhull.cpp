@@ -125,6 +125,9 @@ void initialize_points_heart(vector<point2d>& pts, int n);
 
 /********************************************************************/
 
+/* ****************************** */
+/*Given initializers to test on*/
+/* ****************************** */
 
 /* ****************************** */
 /* Initializes pts with n points on two circles.  The points are in the
@@ -403,6 +406,7 @@ printf("\ninitialize points wave\n");
 //////////////////////// EXTRA / MISC TEST CASES ////////////////////////
 
 
+/*initializes 6 hardcoded points*/
 void initialize_points_hardcoded(vector<point2d>& pts, int n) {
 
   printf("\ninitialize points hard-coded\n"); 
@@ -436,12 +440,13 @@ void initialize_points_hardcoded(vector<point2d>& pts, int n) {
   pts.push_back(point5);
 
   point2d point6;
-  point5.x = 101; 
-  point5.y = 170;
+  point6.x = 101; 
+  point6.y = 170;
   pts.push_back(point6);
 
 }
 
+/*initializes some hardcoded points in a triangle with collinearity*/
 void initialize_points_hardcoded_triangle(vector<point2d>& pts, int n) {
 
   printf("\ninitialize points hard-coded\n"); 
@@ -473,7 +478,9 @@ void initialize_points_hardcoded_triangle(vector<point2d>& pts, int n) {
   pts.push_back(point5);
 }
 
-// This is a test case from Ziyou, represents a nice edge case
+/*This is a test case from Ziyou, represents a nice edge case
+ * initializes n points in 2 vertical lines
+ */ 
 void initialize_points_two_vertical(vector<point2d>& pts, int n) {
   
   printf("\ninitialize points that make two vertical lines.\n"); 
@@ -493,7 +500,7 @@ void initialize_points_two_vertical(vector<point2d>& pts, int n) {
   }
 }
 
-// initialize some vertical points
+/* initialize n vertical points */ 
 void initialize_points_vertical_line(vector<point2d>& pts, int n) {
 
   printf("\ninitialize points vertical line\n"); 
@@ -538,6 +545,15 @@ int main(int argc, char** argv) {
   printf("you entered n=%d\n", NPOINTS);
   assert(NPOINTS >0); 
 
+  /* populate screen with points in a pattern of your choosing 
+   * based off of the initializers defined above 
+   */
+
+  // initialize some random points
+  //initialize_points_random(points, NPOINTS);
+
+  // initialize some points in the shape of a heart 
+  //initialize_points_heart(points, NPOINTS); 
   //populate the points 
   //initialize_points_random(points, NPOINTS); // Change this based on what you actually want to draw
   //initialize_points_heart(points, NPOINTS); 
@@ -558,16 +574,15 @@ int main(int argc, char** argv) {
   // try an edge case - right triangle 
   //initialize_points_hardcoded_triangle(points, NPOINTS);
 
-  //try another triangle
-  //initialize_another_triangle(points, NPOINTS);
-
   //try ziyou's code of 2 parallel lines
   //initialize_points_two_vertical(points, NPOINTS);
 
+  //try a horizontal line
+  //initialize_points_horizontal_line(points, NPOINTS);
   // try a horizontal line
   //initialize_points_horizontal_line(points, NPOINTS);
 
-  // try a vertical line
+  //try a vertical line
   //initialize_points_vertical_line(points, NPOINTS);
 
   // 1. Tom's example
@@ -578,12 +593,13 @@ int main(int argc, char** argv) {
 
   // 3. Leahs's example
   //initialize_points_stripes(points, NPOINTS);
+  //initialize_points_stripes(points, NPOINTS);
 
   // 4. David's example
   //initialize_points_spiral(points, NPOINTS);
 
   // 5. Jack and Manny's example
-  initialize_points_wave(points, NPOINTS);
+  //initialize_points_wave(points, NPOINTS);
 
   //compute the convex hull 
   Rtimer rt1; 
